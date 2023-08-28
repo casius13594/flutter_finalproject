@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 
-class Homepage extends StatefulWidget{
-  const Homepage({super.key});
+class MessagePage extends StatefulWidget{
+  const MessagePage({super.key});
 
   @override
-  State<StatefulWidget> createState()  => _HomePageState();
+  State<StatefulWidget> createState()  => _MessagePageState();
 
 }
 
-class _HomePageState extends State<Homepage>{
+class _MessagePageState extends State<MessagePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Message'),
       ),
     );
   }

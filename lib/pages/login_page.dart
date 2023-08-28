@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_finalproject/pages/home_page.dart';
+import 'package:flutter_finalproject/pages/shifscreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () { 
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (context) => Homepage())
+                        MaterialPageRoute(builder: (context) => shiftscreen())
                       );
                     },
                     style: TextButton.styleFrom(
