@@ -15,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 25),
@@ -129,7 +130,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-
               SizedBox(height: 30),
 
               // Not a member? Register
@@ -162,6 +162,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }
