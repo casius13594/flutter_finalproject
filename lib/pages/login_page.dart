@@ -17,13 +17,6 @@ class _LoginPageState extends State<LoginPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text('LOGIN',
-        style: TextStyle(
-          fontSize: 30,
-          color: Colors.lightBlue,
-          fontWeight: FontWeight.bold,
-        ),),
-        centerTitle: true,
         elevation: 0,
       ),
       body: SafeArea(
@@ -31,8 +24,13 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 10,),
-
+              Text('LOGIN',
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.lightBlue,
+                  fontWeight: FontWeight.bold,
+                ),),
+              SizedBox(height: 20,),
               SvgPicture.asset('lib/images/logo_login.svg',
                 width: 300,
                 height: 300,
