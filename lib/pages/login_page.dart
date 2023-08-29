@@ -14,11 +14,25 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Text('LOGIN',
+        style: TextStyle(
+          fontSize: 30,
+          color: Colors.lightBlue,
+          fontWeight: FontWeight.bold,
+        ),),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 10,),
+
               SvgPicture.asset('lib/images/logo_login.svg',
                 width: 300,
                 height: 300,

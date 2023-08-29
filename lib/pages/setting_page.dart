@@ -96,8 +96,8 @@ class _SettingPageState extends State<Settingpage>{
                               // button for editing profile
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black,
-                                  disabledBackgroundColor: Colors.black,
+                                  backgroundColor: Colors.purpleAccent,
+                                  foregroundColor: Colors.amber,
                                 ),
                                 onPressed: (){
                                   Navigator.push(
