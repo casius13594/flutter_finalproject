@@ -10,13 +10,115 @@ class Settingpage extends StatefulWidget{
 }
 
 class _SettingPageState extends State<Settingpage>{
+  late double height, width;
+
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Setting'),
+        title: Text(
+            'Settings',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 30,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
       ),
+
+      body: Stack(
+          children: [
+            Column(
+              children:[
+                Container(
+                  height: height * .1,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                  ),
+
+                ),
+
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: Container(
+                    height: height* .73,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                          topRight: Radius.circular(50)),
+                    ),
+
+                    child: Column(
+                      children: [
+
+                        // Show profile in settings
+                        Row(
+                          children: [
+
+                            Padding(
+                              padding: EdgeInsets.only(left: 20,top: 20),
+
+                              // image of profile
+                              child:  CircleAvatar(
+                                radius: 50,
+                                backgroundImage: AssetImage('lib/images/image_profile.jpg'),
+                                ),
+                            ),
+
+                            SizedBox(width: 40,),
+
+                            Column(
+                              children: [
+                                Text(
+                                  'My name',
+                                style: Theme.of(context).textTheme.headlineMedium,),
+
+                                SizedBox(height: 5,),
+
+                                Text(
+                                  'abcdzyz.@gmail.com',
+                                  style: Theme.of(context).textTheme.headlineSmall,
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(width: 40,),
+
+                            SizedBox(
+                              // button for editing profile
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  disabledBackgroundColor: Colors.black,
+                                ),
+                                onPressed: (){},
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+
+                            ],
+                        ),
+                    ],
+                    ),
+                  ),
+                  ),
+
+              ]
+            ),
+          ],
+        ),
     );
   }
+
 
 }

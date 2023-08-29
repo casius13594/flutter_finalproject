@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,11 +19,10 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 25),
-
-              Icon(
-                Icons.message,
-                size: 80,
+              SvgPicture.asset('lib/images/logo_login.svg',
+                width: 300,
+                height: 300,
+                alignment: Alignment.topCenter,
               ),
 
               SizedBox(height: 10),
