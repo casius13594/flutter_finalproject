@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/pages/profile_edit.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 
 class Settingpage extends StatefulWidget{
@@ -98,7 +99,12 @@ class _SettingPageState extends State<Settingpage>{
                                   backgroundColor: Colors.black,
                                   disabledBackgroundColor: Colors.black,
                                 ),
-                                onPressed: (){},
+                                onPressed: (){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ProfileEditing())
+                                  );
+                                },
                                 child: Icon(
                                   Icons.edit,
                                   color: Colors.white,
