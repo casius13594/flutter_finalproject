@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -156,12 +157,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
 
                     SizedBox(width: 5),
-                    Text(
-                      'Register',
-                      style: TextStyle(
+                    TextButton(
+                       onPressed: () {
+                         Navigator.push(context,
+                             MaterialPageRoute(builder: (context) => RegisterPage()));
+                       },
+                      child: Text('Register',
+                        style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
+                        ),
                       ),
                     ),
 
