@@ -66,11 +66,13 @@ class _ResetPasswordState extends State<ResetPassword>{
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(color: Colors.white,
+                              width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent),
+                          borderSide: BorderSide(color: Colors.cyanAccent,
+                              width: 2),
                         ),
                         hintText: 'Email',
                         hintStyle: TextStyle(color: Colors.white70),
@@ -100,11 +102,14 @@ class _ResetPasswordState extends State<ResetPassword>{
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Colors.white,
+                              width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent),
+                          borderSide: BorderSide(color: Colors.cyanAccent,
+                              width: 2),
                         ),
                         hintText: 'Phone',
                         hintStyle: TextStyle(color: Colors.white70),
@@ -134,11 +139,13 @@ class _ResetPasswordState extends State<ResetPassword>{
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(color: Colors.white,
+                              width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent),
+                          borderSide: BorderSide(color: Colors.cyanAccent,
+                              width: 2),
                         ),
                         hintText: 'New Password',
                         hintStyle: TextStyle(color: Colors.white70),
@@ -168,11 +175,13 @@ class _ResetPasswordState extends State<ResetPassword>{
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(color: Colors.white,
+                              width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent),
+                          borderSide: BorderSide(color: Colors.cyanAccent,
+                              width: 2),
                         ),
                         hintText: 'Confirm New Password',
                         hintStyle: TextStyle(color: Colors.white70),

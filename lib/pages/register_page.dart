@@ -63,11 +63,13 @@ class _RegisterPageState extends State<RegisterPage>{
 
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: BorderSide(color: Colors.white,
+                          width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: BorderSide(color: Colors.black,
+                          width: 2),
                     ),
                     hintText: 'Name',
                     hintStyle: TextStyle(color: Colors.black),
@@ -97,11 +99,13 @@ class _RegisterPageState extends State<RegisterPage>{
 
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.white,
+                            width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.black,
+                            width: 2),
                       ),
                       hintText: 'Phone',
                       hintStyle: TextStyle(color: Colors.black),
@@ -131,11 +135,13 @@ class _RegisterPageState extends State<RegisterPage>{
 
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.white,
+                            width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.black,
+                            width: 2),
                       ),
                       hintText: 'Email',
                       hintStyle: TextStyle(color: Colors.black),
@@ -165,11 +171,13 @@ class _RegisterPageState extends State<RegisterPage>{
 
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.white,
+                            width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.black,
+                            width: 2),
                       ),
                       hintText: 'Address',
                       hintStyle: TextStyle(color: Colors.black),
@@ -199,11 +207,13 @@ class _RegisterPageState extends State<RegisterPage>{
                   decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.white,
+                            width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(color: Colors.black,
+                            width: 2),
                       ),
                       hintText: 'Password',
                       hintStyle: TextStyle(color: Colors.black),
