@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/pages/forgot_password_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_svg/svg.dart';
@@ -96,14 +97,23 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               SizedBox(height: 20),
+
+              //Forgot Password
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal:  25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        'Forget password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => ResetPassword()));
+                        },
+                        child: Text('Forget password?',
+                          style: TextStyle(
+                              color: Colors.grey[600]
+                          ),
+                        ),
                       ),
                     ],
                   ),
