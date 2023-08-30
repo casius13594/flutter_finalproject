@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.grey[300],
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
