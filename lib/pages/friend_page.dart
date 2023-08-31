@@ -17,76 +17,52 @@ class _FriendPageState extends State<Friendpage>{
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-
+      extendBodyBehindAppBar: true,
+      backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
       appBar: AppBar(
-        shadowColor: Colors.black45,
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
         title: Text(
-          'Friends',
+          'Friend',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Theme.of(context).colorScheme.onSurfaceVariant
           ),
         ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
-
-        leading: IconButton(
-          icon: Icon(Icons.search),
-          onPressed: (){},
-        ),
-        backgroundColor: Colors.black45,
-        actions: [
-          IconButton(
-              onPressed: (){},
-              icon: Icon(Icons.add_card))
-        ],
-
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
-            gradient: LinearGradient(
-              colors: [Colors.purple,Colors.red],
-              begin: Alignment.bottomRight,
-              end: Alignment.topLeft,
-            )
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25),
+              ),
+              color: Theme.of(context).colorScheme.surfaceVariant
           ),
         ),
-
-
-
       ),
+      body: SafeArea(
+        maintainBottomViewPadding: false,
+        child: Stack(
+          children: [
 
-      body: Stack(
-        children: [
-          Column(
-            children:[
-              Container(
-                height: height * .1,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: width,
+                height: height* .73,
                 decoration: BoxDecoration(
-                    color: Colors.black45,
-                ),
-              ),
-
-              Container(
-                decoration: BoxDecoration(
-                color: Colors.black45,
-                ),
-                child: Container(
-                  height: height* .73,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.only(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50)
-                    ),
-                  ),
+                      topRight: Radius.circular(50)),
                 ),
-              ),
-            ],
-          ),
-        ],
+
+                child: Container(),),
+            ),
+          ],
+        ),
       ),
     );
   }

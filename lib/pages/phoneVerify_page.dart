@@ -31,32 +31,35 @@ class _PhoneVerifyState extends State<PhoneVerify>{
       height: 56,
       textStyle: TextStyle(
           fontSize: 30,
-          color: Color.fromRGBO(30, 60, 87, 1),
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
           fontWeight: FontWeight.bold),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(71, 241, 149, 1)),
+        border: Border.all(color:Theme.of(context).colorScheme.onPrimary,),
         borderRadius: BorderRadius.circular(20),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(71, 241, 149, 1)),
+      border: Border.all(color: Theme.of(context).colorScheme.onPrimaryContainer),
       borderRadius: BorderRadius.circular(8),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromRGBO(71, 241, 149, 1),
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
     );
     var code = "";
 
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('lib/images/phone_verify_page_bg.jpg'),
-          fit:BoxFit.cover,
-        ),
+          gradient: RadialGradient(
+              radius: 0.2,
+              focal: Alignment(0, 0),
+              tileMode: TileMode.mirror,
+              colors: [Theme.of(context).colorScheme.tertiary,
+                Theme.of(context).colorScheme.onTertiary]
+          )
       ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -77,7 +80,7 @@ class _PhoneVerifyState extends State<PhoneVerify>{
                   Text(
                     'Phone Verification',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontSize:  55,
                       fontWeight: FontWeight.bold,
                     ),
@@ -148,7 +151,7 @@ class _PhoneVerifyState extends State<PhoneVerify>{
                             });
                         },
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.pink[200],
+                            backgroundColor: Theme.of(context).colorScheme.tertiary,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)
                             )
@@ -157,7 +160,7 @@ class _PhoneVerifyState extends State<PhoneVerify>{
                           child: Text(
                             'Verify',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onTertiary,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),

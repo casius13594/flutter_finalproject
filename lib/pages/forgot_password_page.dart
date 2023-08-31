@@ -12,13 +12,16 @@ class _ResetPasswordState extends State<ResetPassword>{
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('lib/images/forgot_password_bg.jpg'),
-          fit:BoxFit.cover,
-        ),
+          gradient: RadialGradient(
+              radius: 0.78,
+              focal: Alignment(0.7, -0.7),
+              tileMode: TileMode.mirror,
+              colors: [Theme.of(context).colorScheme.tertiary,
+                Theme.of(context).colorScheme.onTertiary]
+          )
       ),
       child: Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor:Colors.transparent,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -38,7 +41,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                     child: Text(
                       'Reset \nPassword',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onTertiaryContainer,
                         fontSize:  55,
                         fontWeight: FontWeight.bold,
                       ),
@@ -53,7 +56,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                     child: Text(
                       'Email',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onTertiaryContainer,
                         fontSize:  20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -61,21 +64,22 @@ class _ResetPasswordState extends State<ResetPassword>{
                   ),
                   SizedBox(height: 5,),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                     decoration: InputDecoration(
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                               width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                               width: 2),
                         ),
+                        fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                         hintText: 'Email',
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )
@@ -89,7 +93,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                     child: Text(
                       'Your Phone',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onTertiaryContainer,
                         fontSize:  20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -97,22 +101,23 @@ class _ResetPasswordState extends State<ResetPassword>{
                   ),
                   SizedBox(height: 5,),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color:Theme.of(context).colorScheme.onTertiaryContainer),
                     decoration: InputDecoration(
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide(
-                              color: Colors.white,
+                              color:Theme.of(context).colorScheme.onPrimaryContainer,
                               width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                               width: 2),
                         ),
+                        fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                         hintText: 'Phone',
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )
@@ -126,7 +131,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                     child: Text(
                       'New Password',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onTertiaryContainer,
                         fontSize:  20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -134,21 +139,22 @@ class _ResetPasswordState extends State<ResetPassword>{
                   ),
                   SizedBox(height: 5,),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer,),
                     decoration: InputDecoration(
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                               width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                               width: 2),
                         ),
+                        fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                         hintText: 'New Password',
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )
@@ -162,7 +168,7 @@ class _ResetPasswordState extends State<ResetPassword>{
                     child: Text(
                       'Confirm New Password',
                       style: TextStyle(
-                        color: Colors.white,
+                        color:Theme.of(context).colorScheme.onTertiaryContainer,
                         fontSize:  20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -170,21 +176,22 @@ class _ResetPasswordState extends State<ResetPassword>{
                   ),
                   SizedBox(height: 5,),
                   TextField(
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                     decoration: InputDecoration(
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.white,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                               width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.cyanAccent,
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                               width: 2),
                         ),
+                        fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                         hintText: 'Confirm New Password',
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: TextStyle(color:Theme.of(context).colorScheme.onTertiaryContainer),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )
@@ -211,9 +218,9 @@ class _ResetPasswordState extends State<ResetPassword>{
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(5),
                               fixedSize: Size(150, 50),
-                              shadowColor: Colors.black,
-                              side: BorderSide(color: Colors.black45, width: 2),
-                              primary: Colors.pink[200],
+                              shadowColor: Theme.of(context).colorScheme.onBackground,
+                              side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
+                              primary: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),

@@ -25,10 +25,14 @@ class _RegisterPageState extends State<RegisterPage>{
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('lib/images/register_background.jpg'),
-          fit:BoxFit.cover,
-        ),
+          gradient: RadialGradient(
+              radius: 0.6,
+              focalRadius: 0.17,
+              focal: Alignment(0.3, -0.3),
+              tileMode: TileMode.mirror,
+              colors: [Theme.of(context).colorScheme.tertiary,
+                Theme.of(context).colorScheme.onTertiary]
+          )
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -49,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage>{
                 Text(
                   'Create \nAccount',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
                     fontSize:  55,
                     fontWeight: FontWeight.bold,
                   ),
@@ -63,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   child: Text(
                     'Full Name',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                       fontSize:  20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -72,24 +76,24 @@ class _RegisterPageState extends State<RegisterPage>{
                 SizedBox(height: 5,),
                 TextField(
                   controller: _controllerName,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
                       errorText: _nameValidate ? 'Value Can\'t Be Empty' : null,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.white,
-                          width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(color: Colors.black,
-                          width: 2),
-                    ),
-                    hintText: 'Name',
-                    hintStyle: TextStyle(color: Colors.black),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    )
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            width: 2),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
+                            width: 2),
+                      ),
+                      hintText: 'Name',
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      )
                   ),
                 ),
 
@@ -98,9 +102,9 @@ class _RegisterPageState extends State<RegisterPage>{
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    'Your Phone Number',
+                    'Your Phone',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                       fontSize:  20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -109,21 +113,21 @@ class _RegisterPageState extends State<RegisterPage>{
                 SizedBox(height: 5,),
                 TextField(
                   controller: _controllerPhoneNum,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
                       errorText: _phoneValidate ? 'Value Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                             width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                             width: 2),
                       ),
                       hintText: 'Phone',
-                      hintStyle: TextStyle(color: Colors.black),
+                      hintStyle: TextStyle(color:Theme.of(context).colorScheme.onTertiaryContainer),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )
@@ -137,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   child: Text(
                     'Email',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                       fontSize:  20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -146,21 +150,22 @@ class _RegisterPageState extends State<RegisterPage>{
                 SizedBox(height: 5,),
                 TextField(
                   controller: _controllerEmail,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
                       errorText: _emailValidate ? 'Value Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                             width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                             width: 2),
                       ),
+                      fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                       hintText: 'Email',
-                      hintStyle: TextStyle(color: Colors.black),
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )
@@ -174,7 +179,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   child: Text(
                     'Address',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                       fontSize:  20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -183,21 +188,22 @@ class _RegisterPageState extends State<RegisterPage>{
                 SizedBox(height: 5,),
                 TextField(
                   controller: _controllerAddress,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
                       errorText: _addressValidate ? 'Value Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                             width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                             width: 2),
                       ),
+                      fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                       hintText: 'Address',
-                      hintStyle: TextStyle(color: Colors.black),
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )
@@ -211,7 +217,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   child: Text(
                     'Password',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                       fontSize:  20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -221,21 +227,22 @@ class _RegisterPageState extends State<RegisterPage>{
                 TextField(
                   controller: _controllerPassword,
                   obscureText: true,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
                       errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.white,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
                             width: 2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Colors.black,
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
                             width: 2),
                       ),
+                      fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                       hintText: 'Password',
-                      hintStyle: TextStyle(color: Colors.black),
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       )
@@ -274,9 +281,9 @@ class _RegisterPageState extends State<RegisterPage>{
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(5),
                               fixedSize: Size(150, 50),
-                              shadowColor: Colors.black,
-                              side: BorderSide(color: Colors.black45, width: 2),
-                              primary: Colors.pink[200],
+                              shadowColor: Theme.of(context).colorScheme.onBackground,
+                              side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
+                              primary: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                       ),

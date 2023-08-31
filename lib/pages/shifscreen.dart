@@ -34,25 +34,25 @@ class _shiftPageState extends State<shiftscreen>{
     return Scaffold(
       body: page[_selectedPageIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.deepPurple,
-        color: Colors.deepPurple.shade400,
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
         animationDuration: Duration(milliseconds: 300),
         items: [
           Icon(
             Icons.home,
-            color: Colors.white,
+            color: Colors.black,
           ),
           Icon(
             Icons.message,
-            color: Colors.white,
+            color: Colors.black,
           ),
           Icon(
             Icons.mobile_friendly,
-            color: Colors.white,
+            color: Colors.black,
           ),
           Icon(
             Icons.settings,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ],
         onTap: (index){
@@ -60,7 +60,7 @@ class _shiftPageState extends State<shiftscreen>{
         },
 
       ),
-      );
+    );
   }
 
 }

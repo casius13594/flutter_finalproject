@@ -13,11 +13,13 @@ class _MessagePageState extends State<MessagePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       appBar: AppBar(
-        title: Text('Message'),
+        title: Text(
+          'Message',
+          style: TextStyle(color: Theme.of(context).colorScheme.surfaceVariant),),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
         automaticallyImplyLeading: false,
       ),
     );
