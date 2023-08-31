@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/profile_edit.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_finalproject/auth.dart';
 
 class Settingpage extends StatefulWidget{
   const Settingpage({super.key});

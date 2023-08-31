@@ -1,16 +1,29 @@
+import 'dart:core';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/login_page.dart';
+import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:pinput/pinput.dart';
 
 class PhoneVerify extends StatefulWidget{
+  String email ="";
+  String password = "";
+  PhoneVerify();
+  PhoneVerify.withData(this.email, this.password);
   @override
-  State<StatefulWidget> createState() => _PhoneVerifyState();
+  State<StatefulWidget> createState() => _PhoneVerifyState(email, password);
+
 
 }
 
 class _PhoneVerifyState extends State<PhoneVerify>{
-
-
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  String email1 = "";
+  String password1 = "";
+  _PhoneVerifyState(String emailSet, String passwordSet){
+    email1 = emailSet;
+    password1 = passwordSet;
+  }
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -36,6 +49,8 @@ class _PhoneVerifyState extends State<PhoneVerify>{
         color: Color.fromRGBO(71, 241, 149, 1),
       ),
     );
+    var code = "";
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -105,6 +120,9 @@ class _PhoneVerifyState extends State<PhoneVerify>{
                     length: 6,
                     showCursor: true,
                     onCompleted: (pin) => print(pin),
+                    onChanged: (value){
+                      code = value;
+                    },
                   ),
 
                   SizedBox(height: 20,),
@@ -114,11 +132,20 @@ class _PhoneVerifyState extends State<PhoneVerify>{
                       width: double.infinity,
                       height: 56,
                       child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => LoginPage())
-                          );
+                        onPressed: () async {
+
+                            PhoneAuthCredential credential = PhoneAuthProvider
+                                .credential(verificationId: RegisterPage.verify, smsCode: code);
+                            await auth.signInWithCredential(credential);
+                            FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                email: email1,
+                                password: password1
+                            ).then((value) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => LoginPage()));
+                            }).onError((error, stackTrace) {
+                              print("Error ${error.toString()} ");
+                            });
                         },
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.pink[200],

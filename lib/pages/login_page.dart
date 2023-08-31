@@ -3,6 +3,8 @@ import 'package:flutter_finalproject/pages/forgot_password_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_finalproject/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,13 +14,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      
       body: SafeArea(
-        maintainBottomViewPadding: false,
         child: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -51,6 +57,8 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: TextField(
+                    controller: _controllerEmail,
+                    enableSuggestions: true,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
@@ -64,6 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       border: InputBorder.none,
                       hintText: 'Email',
+                      prefixIcon: Icon(
+                        Icons.mail
+                      )
                   ),
                 ),
                 ),
@@ -75,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: TextField(
+                  controller: _controllerPassword,
                   obscureText: true,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
@@ -89,6 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                     filled: true,
                     border: InputBorder.none,
                     hintText: 'Password',
+                    prefixIcon: Icon(
+                      Icons.lock
+                    )
                   ),
                 ),
               ),
@@ -125,12 +140,19 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
                   height: 56,
                   child: TextButton(
-                    onPressed: () { 
-                      Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (context) => shiftscreen())
-                      );
+                    onPressed: () {
+                      FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: _controllerEmail.text,
+                          password: _controllerPassword.text
+                      ).then((value) {
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => shiftscreen()));
+                      }).onError((error, stackTrace) {
+                        print("Error ${error.toString()} ");
+                      });
                     },
+
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.purple,
                       shape: RoundedRectangleBorder(
