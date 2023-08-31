@@ -225,11 +225,12 @@ class _RegisterPageState extends State<RegisterPage>{
 
                 SizedBox(height: 20,),
                 Container(
-                  margin: EdgeInsets.only(left: 300),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Directionality(
+                    Align(
+                    alignment: Alignment.centerRight, // Align the button to the right
+                      child:Directionality(
                           textDirection: TextDirection.rtl,
                           child: ElevatedButton.icon(
                             onPressed: (){
@@ -247,6 +248,7 @@ class _RegisterPageState extends State<RegisterPage>{
                             ),
                           ),
                       ),
+                    ),
                     ],
                   ),
                 )

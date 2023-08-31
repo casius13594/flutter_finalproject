@@ -47,7 +47,7 @@ class _shiftPageState extends State<shiftscreen>{
             color: Colors.white,
           ),
           Icon(
-            Icons.child_friendly,
+            Icons.mobile_friendly,
             color: Colors.white,
           ),
           Icon(
