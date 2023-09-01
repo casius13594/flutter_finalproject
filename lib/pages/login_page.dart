@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/forgot_password_page.dart';
+import 'package:flutter_finalproject/pages/home_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_finalproject/auth.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -19,6 +23,32 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+  _handleGoogleLogin(){
+    _signInWithGoogle().then((user){
+      log('\nUser: ${user.user}');
+      log('\nUserAddtionalInfo: ${user.additionalUserInfo}');
+      Navigator.push(context,
+          MaterialPageRoute(
+              builder: (context) => shiftscreen()));
+    });
+  }
+
+    Future<UserCredential> _signInWithGoogle() async {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +246,19 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-
+                      SizedBox(width: 5),
+                      TextButton(
+                        onPressed: () {
+                          _handleGoogleLogin();
+                        },
+                        child: Text('Google',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
