@@ -1,13 +1,11 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/forgot_password_page.dart';
-import 'package:flutter_finalproject/pages/home_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_finalproject/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 class LoginPage extends StatefulWidget {
@@ -27,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     _signInWithGoogle().then((user){
       log('\nUser: ${user.user}');
       log('\nUserAddtionalInfo: ${user.additionalUserInfo}');
+
       Navigator.push(context,
           MaterialPageRoute(
               builder: (context) => shiftscreen()));
@@ -46,8 +45,20 @@ class _LoginPageState extends State<LoginPage> {
         idToken: googleAuth?.idToken,
       );
 
+
+
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential authResult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+      FirebaseFirestore.instance.collection('users').add({
+        "name" : authResult.user?.displayName,
+        "phone" : authResult.user?.phoneNumber,
+        "email" : authResult.user?.email,
+        "address" : ""
+      });
+
+      return authResult;
     }
 
   @override
