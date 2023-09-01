@@ -269,7 +269,11 @@ class _RegisterPageState extends State<RegisterPage>{
                                   
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) =>
-                                          PhoneVerify.withData(_controllerEmail.text,_controllerPassword.text)));
+                                          PhoneVerify.withData(_controllerName.text,
+                                              _controllerPhoneNum.text,
+                                              _controllerEmail.text,
+                                              _controllerAddress.text,
+                                              _controllerPassword.text)));
                                 },
                                 codeAutoRetrievalTimeout: (String verificationID) {},
                               );

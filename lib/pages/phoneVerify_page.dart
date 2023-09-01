@@ -4,25 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/login_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:pinput/pinput.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PhoneVerify extends StatefulWidget{
   String email ="";
   String password = "";
+  String name ="";
+  String address ="";
+  String phone ="";
   PhoneVerify();
-  PhoneVerify.withData(this.email, this.password);
+  PhoneVerify.withData(this.name, this.phone, this.email, this.address, this.password);
   @override
-  State<StatefulWidget> createState() => _PhoneVerifyState(email, password);
-
-
+  State<StatefulWidget> createState() => _PhoneVerifyState(name, phone, email, address, password);
 }
 
 class _PhoneVerifyState extends State<PhoneVerify>{
   final FirebaseAuth auth = FirebaseAuth.instance;
+  String name1 = "";
+  String phone1 = "";
   String email1 = "";
   String password1 = "";
-  _PhoneVerifyState(String emailSet, String passwordSet){
-    email1 = emailSet;
-    password1 = passwordSet;
+  String address1 = "";
+  _PhoneVerifyState(String name, String phone, String email, String address, String password){
+    name1 = name;
+    phone1 = phone;
+    email1 = email;
+    address1 = address;
+    password1 = password;
   }
   @override
   Widget build(BuildContext context) {
@@ -148,6 +156,12 @@ class _PhoneVerifyState extends State<PhoneVerify>{
                                   MaterialPageRoute(builder: (context) => LoginPage()));
                             }).onError((error, stackTrace) {
                               print("Error ${error.toString()} ");
+                            });
+                            FirebaseFirestore.instance.collection('users').add({
+                              "name" : name1,
+                              "phone" : phone1,
+                              "email" : email1,
+                              "address" : address1
                             });
                         },
                         style: TextButton.styleFrom(
