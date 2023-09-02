@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/phoneVerify_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget{
   const RegisterPage({Key? key}) : super(key:key);
@@ -20,6 +22,9 @@ class _RegisterPageState extends State<RegisterPage>{
   bool _phoneValidate = false;
   bool _emailValidate = false;
   bool _passwordValidate = false;
+  String _emailError = '';
+  String _phoneError = '';
+  String _passwordError = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -77,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerName,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _nameValidate ? 'This Field Can\'t Be Empty' : null,
+                      errorText: _nameValidate ? 'This field cannot be empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -114,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerPhoneNum,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _phoneValidate ? 'This Field Can\'t Be Empty' : null,
+                      errorText: _phoneValidate ? _phoneError : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -151,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerEmail,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _emailValidate ? 'This Field Can\'t Be Empty' : null,
+                      errorText: _emailValidate ? _emailError : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -227,7 +232,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   obscureText: true,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _passwordValidate ? 'This Field Can\'t Be Empty' : null,
+                      errorText: _passwordValidate ? _passwordError : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -260,11 +265,30 @@ class _RegisterPageState extends State<RegisterPage>{
                             onPressed: () async {
                               setState(() {
                                 _controllerName.text.isEmpty? _nameValidate = true :  _nameValidate = false;
-                                _controllerPhoneNum.text.isEmpty? _phoneValidate = true :  _phoneValidate = false;
-                                _controllerEmail.text.isEmpty? _emailValidate = true :  _emailValidate = false;
-                                _controllerPassword.text.isEmpty? _passwordValidate = true :  _passwordValidate = false;
+                                if(_controllerEmail.text.isEmpty){
+                                  _emailValidate = true;
+                                  _emailError = 'This field cannot be empty';
+                                }
+
+                                if (FirebaseFirestore.instance.collection('users')
+                                    .where('email', isEqualTo: _controllerEmail.text) != null
+                                && !_controllerEmail.text.isEmpty) {
+                                _emailValidate = true;
+                                _emailError = "This email is already used for another account";
+                                }
+                                if (FirebaseFirestore.instance.collection('users')
+                                    .where('phone', isEqualTo: _controllerPhoneNum.text) != null
+                                && !_controllerPhoneNum.text.isEmpty) {
+                                  _phoneValidate = true;
+                                  _phoneError = "This phone number is already used for another account";
+                                }
+                                if (_controllerPassword.text.length < 6) {
+                                  _passwordValidate = true;
+                                  _passwordError = "Password length must be at least 6 characters";
+                                }
+
                               });
-                              if(_nameValidate && _phoneValidate && _passwordValidate && _emailValidate) {
+                              if(!_nameValidate && !_phoneValidate && !_passwordValidate && !_emailValidate) {
                                 await FirebaseAuth.instance.verifyPhoneNumber(
                                   phoneNumber: _controllerPhoneNum.text,
                                   verificationCompleted: (PhoneAuthCredential credential){},
@@ -285,6 +309,7 @@ class _RegisterPageState extends State<RegisterPage>{
                                   codeAutoRetrievalTimeout: (String verificationID) {},
                                 );
                               }
+                              else Fluttertoast.showToast(msg: 'Please check the fields\' conditions again');
 
 
 

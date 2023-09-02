@@ -5,6 +5,7 @@ import 'package:flutter_finalproject/pages/login_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:pinput/pinput.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class PhoneVerify extends StatefulWidget{
   String email ="";
@@ -19,6 +20,7 @@ class PhoneVerify extends StatefulWidget{
 }
 
 class _PhoneVerifyState extends State<PhoneVerify>{
+  bool isEmailVerified = false;
   final FirebaseAuth auth = FirebaseAuth.instance;
   String name1 = "";
   String phone1 = "";
@@ -31,6 +33,25 @@ class _PhoneVerifyState extends State<PhoneVerify>{
     email1 = email;
     address1 = address;
     password1 = password;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    if(!isEmailVerified){
+      sendVerificationEmail();
+    }
+  }
+
+  Future sendVerificationEmail() async{
+    try{
+      final user = FirebaseAuth.instance.currentUser!;
+      await user.sendEmailVerification();
+    }
+    catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
   }
   @override
   Widget build(BuildContext context) {
