@@ -19,7 +19,6 @@ class _RegisterPageState extends State<RegisterPage>{
   bool _nameValidate = false;
   bool _phoneValidate = false;
   bool _emailValidate = false;
-  bool _addressValidate = false;
   bool _passwordValidate = false;
   @override
   Widget build(BuildContext context) {
@@ -78,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerName,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _nameValidate ? 'Value Can\'t Be Empty' : null,
+                      errorText: _nameValidate ? 'This Field Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -115,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerPhoneNum,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _phoneValidate ? 'Value Can\'t Be Empty' : null,
+                      errorText: _phoneValidate ? 'This Field Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -152,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerEmail,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _emailValidate ? 'Value Can\'t Be Empty' : null,
+                      errorText: _emailValidate ? 'This Field Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -190,7 +189,6 @@ class _RegisterPageState extends State<RegisterPage>{
                   controller: _controllerAddress,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _addressValidate ? 'Value Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -229,7 +227,7 @@ class _RegisterPageState extends State<RegisterPage>{
                   obscureText: true,
                   style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                   decoration: InputDecoration(
-                      errorText: _passwordValidate ? 'Value Can\'t Be Empty' : null,
+                      errorText: _passwordValidate ? 'This Field Can\'t Be Empty' : null,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -260,23 +258,34 @@ class _RegisterPageState extends State<RegisterPage>{
                           textDirection: TextDirection.rtl,
                           child: ElevatedButton.icon(
                             onPressed: () async {
-                              await FirebaseAuth.instance.verifyPhoneNumber(
-                                phoneNumber: _controllerPhoneNum.text,
-                                verificationCompleted: (PhoneAuthCredential credential){},
-                                verificationFailed: (FirebaseAuthException e) {},
-                                codeSent: (String verificationID, int? resendToken) {
-                                  RegisterPage.verify = verificationID;
-                                  
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) =>
-                                          PhoneVerify.withData(_controllerName.text,
-                                              _controllerPhoneNum.text,
-                                              _controllerEmail.text,
-                                              _controllerAddress.text,
-                                              _controllerPassword.text)));
-                                },
-                                codeAutoRetrievalTimeout: (String verificationID) {},
-                              );
+                              setState(() {
+                                _controllerName.text.isEmpty? _nameValidate = true :  _nameValidate = false;
+                                _controllerPhoneNum.text.isEmpty? _phoneValidate = true :  _phoneValidate = false;
+                                _controllerEmail.text.isEmpty? _emailValidate = true :  _emailValidate = false;
+                                _controllerPassword.text.isEmpty? _passwordValidate = true :  _passwordValidate = false;
+                              });
+                              if(_nameValidate && _phoneValidate && _passwordValidate && _emailValidate) {
+                                await FirebaseAuth.instance.verifyPhoneNumber(
+                                  phoneNumber: _controllerPhoneNum.text,
+                                  verificationCompleted: (PhoneAuthCredential credential){},
+                                  verificationFailed: (FirebaseAuthException e) {},
+                                  codeSent: (String verificationID, int? resendToken) {
+                                    RegisterPage.verify = verificationID;
+
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) =>
+                                            PhoneVerify.withData(_controllerName.text,
+                                                _controllerPhoneNum.text,
+                                                _controllerEmail.text,
+                                                _controllerAddress.text,
+                                                _controllerPassword.text)
+                                        )
+                                    );
+                                  },
+                                  codeAutoRetrievalTimeout: (String verificationID) {},
+                                );
+                              }
+
 
 
                             },
