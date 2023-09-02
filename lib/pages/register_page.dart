@@ -3,6 +3,7 @@ import 'package:flutter_finalproject/pages/phoneVerify_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 class RegisterPage extends StatefulWidget{
   const RegisterPage({Key? key}) : super(key:key);
@@ -25,6 +26,8 @@ class _RegisterPageState extends State<RegisterPage>{
   String _emailError = '';
   String _phoneError = '';
   String _passwordError = '';
+  CountryCode selectedCountry = CountryCode(name: "Việt Nam", flagUri: "flags/vn.png", code: "VN", dialCode: "+84");
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -115,27 +118,49 @@ class _RegisterPageState extends State<RegisterPage>{
                   ),
                 ),
                 SizedBox(height: 5,),
-                TextField(
-                  controller: _controllerPhoneNum,
-                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
-                  decoration: InputDecoration(
-                      errorText: _phoneValidate ? _phoneError : null,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
-                            width: 2),
-                      ),
-                      hintText: 'Phone',
-                      hintStyle: TextStyle(color:Theme.of(context).colorScheme.onTertiaryContainer),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      )
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      width: 2.0, // Adjust the width as needed
+                    ),
                   ),
+                  child: Row(children: [
+                    Container(
+                      child: CountryCodePicker(
+                        initialSelection: 'VN',
+                        favorite: ['+84', 'VN'],
+                        showCountryOnly: true,
+                        onChanged: (CountryCode countryCode) {
+                          setState(() {
+                            selectedCountry = countryCode;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _controllerPhoneNum,
+                        keyboardType: TextInputType.phone,
+                        style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer),
+                        decoration: InputDecoration(
+                          errorText: _phoneValidate ? _phoneError : null,
+                          hintText: 'Phone',
+                          hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer),
+                          border: InputBorder.none, // Remove the default border
+                          contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10.0),
+                        ),
+                      ),
+                    ),
+                  ]),
                 ),
 
                 SizedBox(height: 20,),
@@ -263,34 +288,51 @@ class _RegisterPageState extends State<RegisterPage>{
                           textDirection: TextDirection.rtl,
                           child: ElevatedButton.icon(
                             onPressed: () async {
+                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('email', isEqualTo: _controllerEmail.text)
+                                  .get();
+                              if (!querySnapshot.docs.isEmpty) {
+                                _emailValidate = true;
+                                _emailError = "This email is already used for another account";
+                              } else {
+                                _emailValidate = false;
+                              }
+                              querySnapshot = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('phone', isEqualTo: _controllerPhoneNum.text)
+                                  .get();
+                              if (!querySnapshot.docs.isEmpty) {
+                                _phoneValidate = true;
+                                _phoneError = "This phone number is already used for another account";
+                              } else {
+                                _phoneValidate = false;
+                              }
+
                               setState(() {
                                 _controllerName.text.isEmpty? _nameValidate = true :  _nameValidate = false;
                                 if(_controllerEmail.text.isEmpty){
                                   _emailValidate = true;
                                   _emailError = 'This field cannot be empty';
                                 }
+                                else _emailValidate = false;
 
-                                if (FirebaseFirestore.instance.collection('users')
-                                    .where('email', isEqualTo: _controllerEmail.text) != null
-                                && !_controllerEmail.text.isEmpty) {
-                                _emailValidate = true;
-                                _emailError = "This email is already used for another account";
-                                }
-                                if (FirebaseFirestore.instance.collection('users')
-                                    .where('phone', isEqualTo: _controllerPhoneNum.text) != null
-                                && !_controllerPhoneNum.text.isEmpty) {
-                                  _phoneValidate = true;
-                                  _phoneError = "This phone number is already used for another account";
-                                }
                                 if (_controllerPassword.text.length < 6) {
                                   _passwordValidate = true;
                                   _passwordError = "Password length must be at least 6 characters";
                                 }
+                                else _passwordValidate = false;
 
                               });
+
+                              String phoneNum = "";
+                              if(_controllerPhoneNum.text.startsWith('0'))
+                                phoneNum = selectedCountry.dialCode.toString() + _controllerPhoneNum.text.substring(1);
+                              else phoneNum = selectedCountry.dialCode.toString() + _controllerPhoneNum.text;
+
                               if(!_nameValidate && !_phoneValidate && !_passwordValidate && !_emailValidate) {
                                 await FirebaseAuth.instance.verifyPhoneNumber(
-                                  phoneNumber: _controllerPhoneNum.text,
+                                  phoneNumber: phoneNum,
                                   verificationCompleted: (PhoneAuthCredential credential){},
                                   verificationFailed: (FirebaseAuthException e) {},
                                   codeSent: (String verificationID, int? resendToken) {
@@ -299,7 +341,7 @@ class _RegisterPageState extends State<RegisterPage>{
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) =>
                                             PhoneVerify.withData(_controllerName.text,
-                                                _controllerPhoneNum.text,
+                                                phoneNum,
                                                 _controllerEmail.text,
                                                 _controllerAddress.text,
                                                 _controllerPassword.text)
@@ -321,7 +363,7 @@ class _RegisterPageState extends State<RegisterPage>{
                               fixedSize: Size(150, 50),
                               shadowColor: Theme.of(context).colorScheme.onBackground,
                               side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
-                              primary: Theme.of(context).colorScheme.onSurface,
+                              backgroundColor: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                       ),
