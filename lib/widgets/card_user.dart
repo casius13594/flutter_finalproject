@@ -22,7 +22,7 @@ class _ChatUserState extends State<ChatUser> {
           title: Text(widget.user.name),
           //last message
           subtitle: Text(
-            widget.user.email,
+            widget.user.lastMess,
             maxLines: 1,
           ),
           //time
