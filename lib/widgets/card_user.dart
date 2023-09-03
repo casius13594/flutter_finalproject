@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
 import '../pages/message_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ChatUser extends StatefulWidget {
   final ChatUserProfile user;
@@ -18,7 +19,17 @@ class _ChatUserState extends State<ChatUser> {
       child: InkWell(
         onTap: () {},
         child: ListTile(
-          leading: CircleAvatar(child: Icon(CupertinoIcons.person)),
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(ms.height * .03),
+            child: CachedNetworkImage(
+              width: ms.height * .055,
+              height: ms.height * .055,
+              imageUrl: widget.user.image,
+              errorWidget: (context, url, error) => const CircleAvatar(
+                child: Icon(CupertinoIcons.person),
+              ),
+            ),
+          ),
           title: Text(widget.user.name),
           //last message
           subtitle: Text(

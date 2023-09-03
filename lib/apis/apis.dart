@@ -33,4 +33,11 @@ class APIs {
         .doc(user.uid)
         .set(chatUserProfile.toJson());
   }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+    return firestore
+        .collection('users')
+        .where('email', isNotEqualTo: user.email)
+        .snapshots();
+  }
 }

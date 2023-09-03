@@ -34,7 +34,7 @@ class _MessagePageState extends State<MessagePage> {
           automaticallyImplyLeading: false,
         ),
         body: StreamBuilder(
-          stream: APIs.firestore.collection('users').snapshots(),
+          stream: APIs.getAllUsers(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               //check data loading
