@@ -7,20 +7,41 @@ import 'package:flutter_finalproject/pages/setting_page.dart';
 
 
 class shiftscreen extends StatefulWidget {
-  const shiftscreen({super.key});
-
+  String current_email ='';
+  shiftscreen();
+  shiftscreen.withData(this.current_email);
   @override
-  State<shiftscreen> createState() => _shiftPageState();
+  State<shiftscreen> createState() => _shiftPageState(this.current_email);
 }
+
 
 class _shiftPageState extends State<shiftscreen>{
   int _selectedPageIndex = 0;
-  List page = [
-    Homepage(),
-    MessagePage(),
-    Friendpage(),
-    Settingpage()
-  ];
+  late String current_email1='';
+  _shiftPageState(String email)
+  {
+    this.current_email1 = email;
+  }
+  Widget getpage(int index) {
+    switch (index){
+      case 0:
+        return Homepage();
+        break;
+      case 1:
+        return MessagePage();
+        break;
+      case 2:
+        return Friendpage(current_email_pg: this.current_email1);
+        break;
+      case 3:
+        return Settingpage();
+        break;
+      default:
+        return Homepage();
+        break;
+    }
+  }
+
   void _OnItemCLick(int index) async {
     setState(() {
       _selectedPageIndex = index;
@@ -32,7 +53,7 @@ class _shiftPageState extends State<shiftscreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: page[_selectedPageIndex],
+      body: getpage(_selectedPageIndex),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
