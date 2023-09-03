@@ -4,6 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'dart:core';
+
+extension EmailValidator on String {
+  bool isValidEmail() {
+    return RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(this);
+  }
+}
+
 
 class RegisterPage extends StatefulWidget{
   const RegisterPage({Key? key}) : super(key:key);
@@ -287,84 +297,94 @@ class _RegisterPageState extends State<RegisterPage>{
                       child:Directionality(
                           textDirection: TextDirection.rtl,
                           child: ElevatedButton.icon(
+                              icon: Icon(Icons.arrow_circle_right),
+                              label: Text("Let's sign up"),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(5),
+                                fixedSize: Size(150, 50),
+                                shadowColor: Theme.of(context).colorScheme.onBackground,
+                                side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
+                                backgroundColor: Theme.of(context).colorScheme.onSurface,),
                             onPressed: () async {
-                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                              QuerySnapshot querySnapshot = await FirebaseFirestore
+                                  .instance
                                   .collection('users')
-                                  .where('email', isEqualTo: _controllerEmail.text)
+                                  .where(
+                                  'email', isEqualTo: _controllerEmail.text)
                                   .get();
                               if (!querySnapshot.docs.isEmpty) {
                                 _emailValidate = true;
-                                _emailError = "This email is already used for another account";
+                                _emailError =
+                                "This email is already used for another account";
                               } else {
                                 _emailValidate = false;
                               }
                               querySnapshot = await FirebaseFirestore.instance
                                   .collection('users')
-                                  .where('phone', isEqualTo: _controllerPhoneNum.text)
+                                  .where(
+                                  'phone', isEqualTo: _controllerPhoneNum.text)
                                   .get();
                               if (!querySnapshot.docs.isEmpty) {
                                 _phoneValidate = true;
-                                _phoneError = "This phone number is already used for another account";
+                                _phoneError =
+                                "This phone number is already used for another account";
                               } else {
                                 _phoneValidate = false;
                               }
 
                               setState(() {
-                                _controllerName.text.isEmpty? _nameValidate = true :  _nameValidate = false;
-                                if(_controllerEmail.text.isEmpty){
+                                _controllerName.text.isEmpty ?
+                                _nameValidate = true : _nameValidate = false;
+                                if (_controllerEmail.text.isEmpty) {
                                   _emailValidate = true;
                                   _emailError = 'This field cannot be empty';
                                 }
-                                else _emailValidate = false;
-
+                                if(!_controllerEmail.text.isValidEmail()) {
+                                  _emailValidate = true;
+                                  _emailError = 'Please enter a valid email';
+                                }
                                 if (_controllerPassword.text.length < 6) {
                                   _passwordValidate = true;
-                                  _passwordError = "Password length must be at least 6 characters";
+                                  _passwordError =
+                                  "Password length must be at least 6 characters";
                                 }
-                                else _passwordValidate = false;
-
+                                else
+                                  _passwordValidate = false;
                               });
 
                               String phoneNum = "";
-                              if(_controllerPhoneNum.text.startsWith('0'))
-                                phoneNum = selectedCountry.dialCode.toString() + _controllerPhoneNum.text.substring(1);
-                              else phoneNum = selectedCountry.dialCode.toString() + _controllerPhoneNum.text;
+                              if (_controllerPhoneNum.text.startsWith('0'))
+                                phoneNum = selectedCountry.dialCode.toString() +
+                                    _controllerPhoneNum.text.substring(1);
+                              else if (_controllerPhoneNum.text.isEmpty)
+                                phoneNum = "";
+                              else
+                                phoneNum = selectedCountry.dialCode.toString() +
+                                    _controllerPhoneNum.text;
 
-                              if(!_nameValidate && !_phoneValidate && !_passwordValidate && !_emailValidate) {
-                                await FirebaseAuth.instance.verifyPhoneNumber(
-                                  phoneNumber: phoneNum,
-                                  verificationCompleted: (PhoneAuthCredential credential){},
-                                  verificationFailed: (FirebaseAuthException e) {},
-                                  codeSent: (String verificationID, int? resendToken) {
-                                    RegisterPage.verify = verificationID;
-
+                              if (!_nameValidate && !_phoneValidate &&
+                                  !_passwordValidate && !_emailValidate) {
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                      email: _controllerEmail.text.trim(),
+                                      password: _controllerPassword.text.trim())
+                                      .then((value) {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) =>
-                                            PhoneVerify.withData(_controllerName.text,
+                                            PhoneVerify.withData(
+                                                _controllerName.text,
                                                 phoneNum,
                                                 _controllerEmail.text,
                                                 _controllerAddress.text,
                                                 _controllerPassword.text)
                                         )
                                     );
-                                  },
-                                  codeAutoRetrievalTimeout: (String verificationID) {},
-                                );
-                              }
-                              else Fluttertoast.showToast(msg: 'Please check the fields\' conditions again');
+                                  }
+                                  );
+                              } else Fluttertoast.showToast(msg: 'Please check the field(s) again.');
+                            }
 
 
-
-                            },
-                            icon: Icon(Icons.arrow_circle_right),
-                            label: Text("Let's sign up"),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(5),
-                              fixedSize: Size(150, 50),
-                              shadowColor: Theme.of(context).colorScheme.onBackground,
-                              side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
-                              backgroundColor: Theme.of(context).colorScheme.onSurface,
-                            ),
                           ),
                       ),
                     ),
