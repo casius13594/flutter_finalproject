@@ -217,6 +217,13 @@ class _LoginPageState extends State<LoginPage> {
                                   email: _controllerEmail.text,
                                   password: _controllerPassword.text)
                               .then((value) {
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser?.email)
+                                .update({
+                              'is_active': true,
+                              'last_seen' : DateTime.now()
+                                });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

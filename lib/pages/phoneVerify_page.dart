@@ -43,7 +43,7 @@ class _PhoneVerifyState extends State<PhoneVerify>{
   @override
   void initState(){
     super.initState();
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    isEmailVerified = auth.currentUser!.emailVerified;
     if(!isEmailVerified){
       sendVerificationEmail();
       Timer.periodic(
@@ -60,16 +60,32 @@ class _PhoneVerifyState extends State<PhoneVerify>{
   }
 
   Future checkEmailVerified() async{
-    await FirebaseAuth.instance.currentUser!.reload();
+    await auth.currentUser!.reload();
     setState(() {
-      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      isEmailVerified = auth.currentUser!.emailVerified;
     });
-    if(isEmailVerified) timer?.cancel();
+    if(isEmailVerified) {
+      timer?.cancel();
+      FirebaseFirestore.instance.collection('users').add({
+        'address' : address1,
+        'birthdate' : "",
+        'created_at' : DateTime.now(),
+        'email' : email1,
+        'image' : auth.currentUser?.photoURL.toString(),
+        'is_active': false,
+        'lastMess' : 'Welcome to Chat Box',
+        'last_seen' : DateTime.now(),
+        'name' : name1,
+        'phone' : phone1,
+        'push_token' : "",
+      }
+      );
+    }
   }
 
   Future sendVerificationEmail() async{
     try{
-      final user = FirebaseAuth.instance.currentUser!;
+      final user = auth.currentUser!;
       await user.sendEmailVerification();
       setState(() => canResendEmail = false);
       await Future.delayed(Duration(seconds: 5));
@@ -117,7 +133,7 @@ class _PhoneVerifyState extends State<PhoneVerify>{
               style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(50)
               ),
-              onPressed: () => FirebaseAuth.instance.signOut(),
+              onPressed: () => auth.signOut(),
               child: Text(
                 'Cancel',
                 style: TextStyle(fontSize: 24),
