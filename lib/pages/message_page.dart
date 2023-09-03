@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/models/chat_user.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_finalproject/widgets/card_user.dart';
 import '../apis/apis.dart';
+import 'dart:convert';
 
 late Size ms;
 
@@ -15,6 +17,7 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
+  List<ChatUserProfile> list = [];
   @override
   Widget build(BuildContext context) {
     ms = MediaQuery.of(context).size;
@@ -33,20 +36,25 @@ class _MessagePageState extends State<MessagePage> {
         body: StreamBuilder(
           stream: APIs.firestore.collection('users').snapshots(),
           builder: (context, snapshot) {
-            final list = [];
-            if (snapshot.hasData) {
-              final data = snapshot.data?.docs;
-              for (var i in data!) {
-                log('Data:${i.data()}');
-                list.add(i.data()['name']);
-              }
+            switch (snapshot.connectionState) {
+              //check data loading
+              case ConnectionState.waiting:
+              case ConnectionState.none:
+                return const Center(child: CircularProgressIndicator());
+              case ConnectionState.active:
+              case ConnectionState.done:
+                final data = snapshot.data?.docs;
+                list = data
+                        ?.map((e) => ChatUserProfile.fromJson(e.data()))
+                        .toList() ??
+                    [];
+                return ListView.builder(
+                    itemCount: list.length,
+                    padding: EdgeInsets.only(top: ms.height * 0.02),
+                    itemBuilder: (context, index) {
+                      return ChatUser(user: list[index]);
+                    });
             }
-            return ListView.builder(
-                itemCount: list.length,
-                padding: EdgeInsets.only(top: ms.height * 0.02),
-                itemBuilder: (context, index) {
-                  return Text('Name: ${list[index]}');
-                });
           },
         ));
   }
