@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_finalproject/widgets/card_user.dart';
+import '../apis/apis.dart';
 
 late Size ms;
 
@@ -16,22 +19,35 @@ class _MessagePageState extends State<MessagePage> {
   Widget build(BuildContext context) {
     ms = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-      appBar: AppBar(
-        title: Text(
-          'Message',
-          style: TextStyle(color: Theme.of(context).colorScheme.surfaceVariant),
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        appBar: AppBar(
+          title: Text(
+            'Message',
+            style:
+                TextStyle(color: Theme.of(context).colorScheme.surfaceVariant),
+          ),
+          centerTitle: true,
+          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          automaticallyImplyLeading: false,
         ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        automaticallyImplyLeading: false,
-      ),
-      body: ListView.builder(
-          itemCount: 15,
-          padding: EdgeInsets.only(top: ms.height * 0.02),
-          itemBuilder: (context, index) {
-            return const ChatUser();
-          }),
-    );
+        body: StreamBuilder(
+          stream: APIs.firestore.collection('users').snapshots(),
+          builder: (context, snapshot) {
+            final list = [];
+            if (snapshot.hasData) {
+              final data = snapshot.data?.docs;
+              for (var i in data!) {
+                log('Data:${i.data()}');
+                list.add(i.data()['name']);
+              }
+            }
+            return ListView.builder(
+                itemCount: list.length,
+                padding: EdgeInsets.only(top: ms.height * 0.02),
+                itemBuilder: (context, index) {
+                  return Text('Name: ${list[index]}');
+                });
+          },
+        ));
   }
 }

@@ -204,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                         ).then((value) {
                           Navigator.push(context,
                               MaterialPageRoute(
-                                  builder: (context) => shiftscreen()));
+                                  builder: (context) => shiftscreen.withData(_controllerEmail.text)));
                         }).onError((error, stackTrace) {
                           print("Error ${error.toString()} ");
                         });
