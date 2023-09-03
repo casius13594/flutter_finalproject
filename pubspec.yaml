@@ -53,6 +53,7 @@ dependencies:
   fluttertoast: ^8.2.2
   country_code_picker: ^3.0.0
   get: ^4.6.5
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:

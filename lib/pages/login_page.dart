@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                                     builder: (context) => ResetPassword()));
                           },
                           child: Text(
-                            'Forget password?',
+                            'Forgot password?',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.error,
                             ),

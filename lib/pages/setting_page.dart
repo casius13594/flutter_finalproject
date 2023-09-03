@@ -1,9 +1,12 @@
-import 'dart:ffi';
+import 'dart:ffi' as ffi;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/pages/login_page.dart';
 import 'package:flutter_finalproject/pages/profile_edit.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_finalproject/main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 class changetheme{
@@ -159,7 +162,25 @@ class _SettingPageState extends State<Settingpage>{
                               })
                         ],
 
-                      )
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size.fromHeight(50),
+                          ),
+                          icon: Icon(Icons.arrow_back, size: 32),
+                          label: Text(
+                            'Sign Out',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          onPressed: () async {
+                            GoogleSignIn _googleSignIn = GoogleSignIn();
+                            await _googleSignIn.disconnect();
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => LoginPage()));
+                          },
+                      ),
 
                     ],
                   ),

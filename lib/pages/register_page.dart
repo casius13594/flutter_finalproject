@@ -5,14 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'dart:core';
+import 'package:email_validator/email_validator.dart';
 
-extension EmailValidator on String {
-  bool isValidEmail() {
-    return RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(this);
-  }
-}
 
 
 class RegisterPage extends StatefulWidget{
@@ -339,7 +333,7 @@ class _RegisterPageState extends State<RegisterPage>{
                                   _emailValidate = true;
                                   _emailError = 'This field cannot be empty';
                                 }
-                                if(!_controllerEmail.text.isValidEmail()) {
+                                if(!EmailValidator.validate(_controllerEmail.text)) {
                                   _emailValidate = true;
                                   _emailError = 'Please enter a valid email';
                                 }
