@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Homepage extends StatefulWidget{
   const Homepage({super.key});
@@ -15,6 +20,14 @@ class _HomePageState extends State<Homepage>{
   late GoogleMapController mapController;
   LocationData? _currentLocation;
   Set<Marker> markers = {};
+
+  Location location = new Location();
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  GeoFlutterFire geo = GeoFlutterFire();
+  late Stream<dynamic> query;
+  late StreamSubscription subscription;
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +52,7 @@ class _HomePageState extends State<Homepage>{
   void initState() {
     super.initState();
     _initLocation();
+    _startQuery();
   }
 
   void _initLocation() async {
@@ -62,8 +76,8 @@ class _HomePageState extends State<Homepage>{
       children: [
         GoogleMap(
           initialCameraPosition: CameraPosition(
-          target: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
-          zoom: 15.0,
+            target: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+            zoom: 15.0,
           ),
           onMapCreated: _onMapCreated,
           myLocationEnabled: true,
@@ -71,15 +85,15 @@ class _HomePageState extends State<Homepage>{
           markers: markers,
         ),
         Positioned(
-            bottom: 50,
+            bottom: 150,
             right: 10,
             child:
             TextButton(
-                child: Icon(Icons.pin_drop, color: Color.fromRGBO(255,255,255, 0.9)),
-                onPressed: () => _addMarker(),
+                child: Icon(Icons.pin_drop),
+                onPressed: () => _startQuery()
             )
-        )
-      ]
+        ),
+      ],
     );
   }
 
@@ -89,20 +103,64 @@ class _HomePageState extends State<Homepage>{
     });
   }
 
-  _addMarker() {
-    var markerIdVal = UniqueKey().toString(); // Generate a unique markerId
-    var marker = Marker(
-      markerId: MarkerId(markerIdVal), // Use the generated markerId
-      position: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
-      icon: BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(
-        title: 'Magic Marker',
-        snippet: '🍄🍄🍄',
-      ),
-    );
-
-    setState(() {
-      markers.add(marker); // Add the new marker to the set
+  Future<DocumentReference> _addGeoPoint() async {
+    var pos = await location.getLocation();
+    GeoFirePoint point = geo.point(latitude: pos.latitude!, longitude: pos.longitude!);
+    return firestore.collection('locations').add({
+      'position': point.data,
+      'name': 'Yay I can be queried!'
     });
   }
+
+  void _updateMarkers(List<DocumentSnapshot> documentList) {
+    print(documentList);
+    setState(() {
+      markers.clear();
+    });
+    documentList.forEach((DocumentSnapshot document) {
+      final data = document.data() as Map<String, dynamic>?;
+
+      if (data != null) {
+        final geopoint = data['position']['geopoint'] as GeoPoint?;
+
+        if (geopoint != null) {
+          var markerIdVal = UniqueKey().toString(); // Generate a unique markerId
+          var marker = Marker(
+            markerId: MarkerId(markerIdVal),
+            position: LatLng(geopoint.latitude, geopoint.longitude),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+              title: 'Magic Marker',
+              snippet: 'kilometers from query center',
+            ),
+          );
+
+          setState(() {
+            markers.add(marker); // Add the marker to the set
+          });
+        }
+      }
+    });
+  }
+
+  _startQuery() async {
+    // Get users location
+    var pos = await location.getLocation();
+    double lat = pos.latitude!;
+    double lng = pos.longitude!;
+    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+
+    // Set a radius for query (in kilometers)
+    double radius = 5;
+
+    var collectionReference = firestore.collection('locations');
+    var stream = geo.collection(collectionRef: collectionReference).within(
+      center: center,
+      radius: radius,
+      field: 'position',
+    );
+
+    subscription = stream.listen(_updateMarkers);
+  }
+
 }
