@@ -66,6 +66,15 @@ class _HomePageState extends State<Homepage>{
         _currentLocation = location;
       });
     }
+
+    location.onLocationChanged.listen((LocationData newLocation) async {
+      setState(() {
+        _currentLocation = newLocation;
+      });
+
+      // Update Firestore with the new location
+      await _updateGeoPoint();
+    });
   }
 
   Widget _buildMap() {
@@ -100,7 +109,7 @@ class _HomePageState extends State<Homepage>{
             child:
             TextButton(
                 child: Icon(Icons.pin_drop),
-                onPressed: () => _addGeoPoint()
+                onPressed: () => _updateGeoPoint()
             )
         ),
       ],
@@ -113,20 +122,32 @@ class _HomePageState extends State<Homepage>{
     });
   }
 
-  Future<void> _addGeoPoint() async {
+  Future<void> _updateGeoPoint() async {
     var pos = await location.getLocation();
     GeoFirePoint point = geo.point(latitude: pos.latitude!, longitude: pos.longitude!);
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      String? userIdentifier = user.email; // Use email if available, otherwise use UID
+      String? userIdentifier = user.email;
 
-      await firestore.collection('locations').doc(userIdentifier).set({
-        'email': user.email,
-        'position': point.data,
-        'name': 'Yay I can be queried!'
-      });
+      DocumentReference userDocRef = firestore.collection('locations').doc(userIdentifier);
+
+      // Check if the document exists
+      DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+      if (userDocSnapshot.exists) {
+        // Update the existing document's "position" field
+        await userDocRef.update({
+          'position': point.data,
+        });
+      } else {
+        // Create a new document with the user's email as the document ID
+        await userDocRef.set({
+          'email': user.email, // Store the user's email
+          'position': point.data,
+        });
+      }
     }
-
+    _startQuery();
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
@@ -179,4 +200,9 @@ class _HomePageState extends State<Homepage>{
     subscription = stream.listen(_updateMarkers);
   }
 
+  @override
+  void dispose() {
+    subscription.cancel(); // Cancel the stream subscription when disposing of the widget
+    super.dispose();
+  }
 }
