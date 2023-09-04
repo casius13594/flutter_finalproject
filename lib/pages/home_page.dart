@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -93,6 +94,15 @@ class _HomePageState extends State<Homepage>{
                 onPressed: () => _startQuery()
             )
         ),
+        Positioned(
+            bottom: 250,
+            right: 10,
+            child:
+            TextButton(
+                child: Icon(Icons.pin_drop),
+                onPressed: () => _addGeoPoint()
+            )
+        ),
       ],
     );
   }
@@ -103,13 +113,20 @@ class _HomePageState extends State<Homepage>{
     });
   }
 
-  Future<DocumentReference> _addGeoPoint() async {
+  Future<void> _addGeoPoint() async {
     var pos = await location.getLocation();
     GeoFirePoint point = geo.point(latitude: pos.latitude!, longitude: pos.longitude!);
-    return firestore.collection('locations').add({
-      'position': point.data,
-      'name': 'Yay I can be queried!'
-    });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String? userIdentifier = user.email; // Use email if available, otherwise use UID
+
+      await firestore.collection('locations').doc(userIdentifier).set({
+        'email': user.email,
+        'position': point.data,
+        'name': 'Yay I can be queried!'
+      });
+    }
+
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
@@ -122,7 +139,7 @@ class _HomePageState extends State<Homepage>{
 
       if (data != null) {
         final geopoint = data['position']['geopoint'] as GeoPoint?;
-
+        final markerTitle = data['email'] as String?;
         if (geopoint != null) {
           var markerIdVal = UniqueKey().toString(); // Generate a unique markerId
           var marker = Marker(
@@ -130,8 +147,7 @@ class _HomePageState extends State<Homepage>{
             position: LatLng(geopoint.latitude, geopoint.longitude),
             icon: BitmapDescriptor.defaultMarker,
             infoWindow: InfoWindow(
-              title: 'Magic Marker',
-              snippet: 'kilometers from query center',
+              title: markerTitle
             ),
           );
 
