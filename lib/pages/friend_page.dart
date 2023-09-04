@@ -197,19 +197,26 @@ class _FriendPageState extends State<Friendpage>{
                       Icons.person,
                     ),
                     trailing: (item['state']!=3)?
-                        ElevatedButton(
-                            onPressed: (){
-                              if(item['state'] == 0)
-                              {
-                                addFriendState(email_current, item['email'], 1, index);
-                                addFriendState(item['email'], email_current, 3, -1);
-                              }
-                            },
-                            child: liststate(item['state']),
-                          )
+                        Row(mainAxisSize: MainAxisSize.min,
+                          children: <Widget> [
+                            is_online(item['is_active']),
+                            SizedBox(width: 5),
+                            ElevatedButton(
+                                onPressed: (){
+                                  if(item['state'] == 0)
+                                  {
+                                    addFriendState(email_current, item['email'], 1, index);
+                                    addFriendState(item['email'], email_current, 3, -1);
+                                  }
+                                },
+                                child: liststate(item['state']),
+                              ),
+                          ],
+                        )
                         : Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
+                            is_online(item['is_active']),
                             ElevatedButton(
                               onPressed: (){
                                 deleteFriendState(email_current, item['email'], 0, index);
@@ -253,6 +260,26 @@ class _FriendPageState extends State<Friendpage>{
         return Text('Connect');
         break;
     }
+  }
+
+  is_online(bool check)
+  {
+    return (check)?
+      Container(
+      width: 20.0, // Adjust the width and height as needed
+      height: 20.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle, // Create a circular shape
+        color: Colors.green[900],//Theme.of(context).colorScheme.primary,   // Set the color to green
+      ),
+      ) : Container(
+      width: 20.0, // Adjust the width and height as needed
+      height: 20.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle, // Create a circular shape
+        color: Colors.grey[900],//Theme.of(context).colorScheme.onSecondary,   // Set the color to green
+        ),
+      );
   }
 
   Future<void> updateFriendState(String email_friend1, String email_friend2, int newState, int index) async {
