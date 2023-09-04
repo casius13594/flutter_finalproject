@@ -56,7 +56,7 @@ dependencies:
   email_validator: ^2.1.17
   image_picker: ^1.0.4
   firebase_storage: ^11.2.6
-
+  geoflutterfire2: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
