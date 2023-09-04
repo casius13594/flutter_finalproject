@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/apis/apis.dart';
+import 'package:flutter_finalproject/pages/create_password.dart';
 import 'package:flutter_finalproject/pages/forgot_password_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
+
   _handleGoogleLogin() {
     _signInWithGoogle().then((user) async {
       log('\nUser: ${user.user}');
@@ -32,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         APIs.createUser().then((value) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => shiftscreen()));
+              context, MaterialPageRoute(builder: (context) => CreatePasswordPage()));
         });
       }
     });
@@ -289,7 +292,11 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(width: 5),
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            if(FirebaseAuth.instance.currentUser != null ) {
+                              await GoogleSignIn().disconnect();
+                              await FirebaseAuth.instance.signOut();
+                            }
                             _handleGoogleLogin();
                           },
                           child: Text(
