@@ -1,5 +1,15 @@
+
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class ProfileEditing extends StatefulWidget{
   @override
@@ -9,7 +19,7 @@ class ProfileEditing extends StatefulWidget{
 
 class _ProfileEditingState extends State<ProfileEditing>{
 
-
+  String imageUrl = '';
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -95,15 +105,47 @@ class _ProfileEditingState extends State<ProfileEditing>{
             Positioned(
               top: safeHeight*0.3 -105,
               left: width/2 -105,
-              child: CircleAvatar(
-                radius: 100+5,
-                backgroundColor: Colors.white,
-                child: CircleAvatar(
-                  radius: 100,
-                  backgroundImage: AssetImage('lib/images/image_profile.jpg'),
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircleAvatar(
+                      radius: 105,
+                      backgroundImage: NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+                  ),
+                  Positioned(child: IconButton(
+                    onPressed: () async {
+                      final status = await Permission.storage.request();
+                      if (status.isGranted)
+                        {
+                          ImagePicker imagePicker = ImagePicker();
+                          XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+                          print('${file?.path}');
+
+                          if(file == null) return;
+
+                          Reference referenceDirImages = FirebaseStorage.instance.ref().child('images');
+                          Reference imgToUpload = referenceDirImages.child(FirebaseAuth.instance.currentUser!.email.toString());
+                          try{
+                            await imgToUpload.putFile(File(file.path));
+                            imageUrl = await imgToUpload.getDownloadURL();
+                          }catch(error){}
+                        }
+                      else if (status.isPermanentlyDenied) {
+                        openAppSettings();
+                      } else Fluttertoast.showToast(msg: 'Please allow permission');
+
+
+
+                    },
+                    icon: const Icon(Icons.add_a_photo),),
+                    bottom: -10,
+                    right: 20,
+                  )
+                ],
               ),
-            ),
+
+            )
+
           ],
         ),
 
