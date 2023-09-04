@@ -86,71 +86,116 @@ class _SettingPageState extends State<Settingpage>{
                     children: [
                       // Show profile in settings
                       Row(
-                        children: [
-
-                          Padding(
-                            padding: EdgeInsets.only(left: 0,top: 0),
-
-                            // image of profile
-                            child:  CircleAvatar(
-                              radius: 50,
-                              backgroundImage: AssetImage('lib/images/image_profile.jpg'),
-                            ),
-                          ),
-
-                          SizedBox(width: 40,),
-
-                          Column(
-                            children: [
-                              Text(
-                                'My name',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                  fontSize: 40,
-                                ),),
-
-                              SizedBox(height: 5,),
-
-                              Text(
-                                'abcdzyz.@gmail.com',
-                                style:TextStyle(
-                                  fontSize: 20,
-                                  color: Theme.of(context).colorScheme.onTertiaryContainer,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(width: 40,),
-
-                          SizedBox(
-                            // button for editing profile
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  foregroundColor: Colors.transparent,
-                                  elevation: 0
-                              ),
-                              onPressed: (){
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ProfileEditing())
-                                );
-                              },
-                              child: Icon(
-                                Icons.edit,
-                                color: Theme.of(context).colorScheme.tertiary,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 0, top: 0),
+                              // image of profile
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: AssetImage('lib/images/image_profile.jpg'),
                               ),
                             ),
-                          )
 
-                        ],
-                      ),
+                            SizedBox(width: 40),
+
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start, // Adjust alignment as needed
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      FirebaseAuth.instance.currentUser!.displayName.toString(),
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                        fontSize: 40
+                                      ),
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 5),
+
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      FirebaseAuth.instance.currentUser!.email.toString(),
+                                      style: TextStyle(
+                                        fontSize: 40,
+                                        color: Theme.of(context).colorScheme.onTertiaryContainer,
+                                      ),
+                                    ),
+                                  ),
+
+
+                                    // button for editing profile
+                                  //   ElevatedButton.icon(
+                                  //   style: ElevatedButton.styleFrom(
+                                  //     backgroundColor: Theme.of(context).colorScheme.onTertiary,
+                                  //     minimumSize: Size.fromHeight(30),
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(20), // Adjust the radius as needed),
+                                  //     )
+                                  //   ),
+                                  //     icon: Icon(
+                                  //       Icons.edit,
+                                  //       size: 25,
+                                  //       color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  //   ),
+                                  //   label: FittedBox(
+                                  //     fit: BoxFit.scaleDown,
+                                  //     child: Text(
+                                  //     'Edit profile',
+                                  //     style: TextStyle(
+                                  //         fontSize: 24,
+                                  //         color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                  //     )
+                                  //   ),
+                                  //   onPressed: (){
+                                  //     Navigator.push(
+                                  //         context,
+                                  //         MaterialPageRoute(builder: (context) => ProfileEditing())
+                                  //     );
+                                  //   },
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+
+                          SizedBox(height: 20,),
+
+
+
+
 
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Edit profile:',
+                                style: Theme.of(context).textTheme.headlineMedium,
+                              ),
+                              SizedBox(width: 20,),
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) =>ProfileEditing()));},
+                                  icon: Icon(Icons.edit,
+                                    color: Theme.of(context).colorScheme.onTertiaryContainer,))
+                            ]
+                        ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Change theme:',
-                            style: Theme.of(context).textTheme.headlineMedium,),
+                          Expanded(
+                              child: Text(
+                                'Change theme:',
+                                style: Theme.of(context).textTheme.headlineMedium,
+                              )
+                          ),
+
 
                           SizedBox(width: 20,),
 
@@ -166,12 +211,18 @@ class _SettingPageState extends State<Settingpage>{
                       SizedBox(height: 20),
                       ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.onTertiary,
                             minimumSize: Size.fromHeight(50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20), // Adjust the radius as needed
+                            ),
                           ),
-                          icon: Icon(Icons.arrow_back, size: 32),
+                          icon: Icon(Icons.arrow_back, size: 32,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,),
                           label: Text(
                             'Sign Out',
-                            style: TextStyle(fontSize: 24),
+                            style: TextStyle(fontSize: 24,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant),
                           ),
                           onPressed: () async {
                             GoogleSignIn _googleSignIn = GoogleSignIn();
