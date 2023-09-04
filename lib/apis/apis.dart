@@ -9,6 +9,22 @@ class APIs {
   //access the firebase
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  //ChatUserProfile
+  static late ChatUserProfile cur_chatUserProfile;
+  static Future<void> SelfInfo() async {
+    await firestore
+        .collection('users')
+        .doc(user.email)
+        .get()
+        .then((user) async {
+      if (user.exists) {
+        cur_chatUserProfile = ChatUserProfile.fromJson(user.data()!);
+      } else {
+        await createUser().then((value) => SelfInfo());
+      }
+    });
+  }
+
   static User get user => auth.currentUser!;
   static Future<bool> checkUserExist() async {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
