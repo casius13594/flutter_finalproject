@@ -15,6 +15,7 @@ class _FriendPageState extends State<Friendpage>{
   late double height, width;
   String name ='';
   String email_current='';
+
   _FriendPageState(String email)
   {
     this.email_current=email;
@@ -23,6 +24,7 @@ class _FriendPageState extends State<Friendpage>{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Map<String, dynamic>> listfriend_state =[];
+  List<Map<String, dynamic>> listfriend_state_withName =[];
 
   Future<void> fetchData() async {
     try {
@@ -114,10 +116,28 @@ class _FriendPageState extends State<Friendpage>{
   @override
   void initState() {
     super.initState();
+    listfriend_state_withName = listfriend_state;
     fetchData();
   }
 
+  void fitter(String keyValue)
+  {
+    List<Map<String,dynamic>> results =[];
+    if(keyValue.isEmpty)
+      {
+        results = listfriend_state;
+      }
+    else
+      {
+        results=listfriend_state
+            .where((element) => element['name'].toString().toLowerCase().contains(keyValue.toLowerCase()))
+        .toList();
+      }
 
+    setState(() {
+      listfriend_state_withName = results;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -156,58 +176,58 @@ class _FriendPageState extends State<Friendpage>{
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search...',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    // Implement search functionality here
-                    // You can filter the dataList based on the search input.
-                    // For simplicity, we'll just display all data here.
-                  },
+                suffixIcon: Icon( Icons.search,
                 ),
               ),
+              onChanged: (val){
+                  fitter(val);
+                  },
             ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: listfriend_state.length,
+              itemCount: listfriend_state_withName.length,
               itemBuilder: (context, index) {
-                Map<String, dynamic> item = listfriend_state[index];
-                return ListTile(
-                  title: Text(item['name']),
-                  leading: Icon(
-                    Icons.person,
+                Map<String, dynamic> item = listfriend_state_withName[index];
+                return Card(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  child: ListTile(
+                    title: Text(item['name']),
+                    leading: Icon(
+                      Icons.person,
+                    ),
+                    trailing: (item['state']!=3)?
+                        ElevatedButton(
+                            onPressed: (){
+                              if(item['state'] == 0)
+                              {
+                                addFriendState(email_current, item['email'], 1, index);
+                                addFriendState(item['email'], email_current, 3, -1);
+                              }
+                            },
+                            child: liststate(item['state']),
+                          )
+                        : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: (){
+                                deleteFriendState(email_current, item['email'], 0, index);
+                                deleteFriendState(item['email'], email_current, 0, -1);
+                              },
+                              child: Text('Reject',),
+                            ),
+                            ElevatedButton(
+                              onPressed: (){
+                                updateFriendState(email_current, item['email'], 2, index);
+                                updateFriendState(item['email'], email_current, 2, -1);
+                              },
+                              child: Text('Accept'),
+                            ),
+                          ],
+                        ),
+                    // Replace 'name' with the field you want to display// Replace 'description' as needed
                   ),
-                  trailing: (item['state']!=3)?
-                      ElevatedButton(
-                          onPressed: (){
-                            if(item['state'] == 0)
-                            {
-                              addFriendState(email_current, item['email'], 1, index);
-                              addFriendState(item['email'], email_current, 3, -1);
-                            }
-                          },
-                          child: liststate(item['state']),
-                        )
-                      : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ElevatedButton(
-                            onPressed: (){
-                              deleteFriendState(email_current, item['email'], 0, index);
-                              deleteFriendState(item['email'], email_current, 0, -1);
-                            },
-                            child: Text('Reject',),
-                          ),
-                          ElevatedButton(
-                            onPressed: (){
-                              updateFriendState(email_current, item['email'], 2, index);
-                              updateFriendState(item['email'], email_current, 2, -1);
-                            },
-                            child: Text('Accept'),
-                          ),
-                        ],
-                      ),
-                  // Replace 'name' with the field you want to display// Replace 'description' as needed
                 );
               },
             ),
