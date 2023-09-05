@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
+import 'package:flutter_finalproject/models/message.dart';
 import 'package:flutter_finalproject/pages/message_page.dart';
+import 'package:flutter_finalproject/widgets/card_message.dart';
 import '../models/chat_user.dart';
 import '../widgets/card_user.dart';
 import '../apis/apis.dart';
@@ -15,6 +20,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  List<Message> _list = [];
   bool isTextFieldExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -23,11 +29,12 @@ class _ChatPageState extends State<ChatPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: _appBar(),
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         ),
         body: Column(children: [
           Expanded(
             child: StreamBuilder(
-              stream: APIs.getAllUsers(),
+              stream: APIs.getAllMess(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   //check data loading
@@ -36,23 +43,37 @@ class _ChatPageState extends State<ChatPage> {
                   // return const Center(child: CircularProgressIndicator());
                   case ConnectionState.active:
                   case ConnectionState.done:
-                    //final data = snapshot.data?.docs;
+                    final data = snapshot.data?.docs;
                     //list = data
                     //       ?.map((e) => ChatUserProfile.fromJson(e.data()))
                     //        .toList() ??
                     //    [];
-                    final _list = ['hi', 'hello'];
+                    _list.clear();
+                    _list.add(Message(
+                        sentTime: '10:00pm',
+                        ToID: 'xyz',
+                        type: Type.text,
+                        SenderId: APIs.user.uid,
+                        content: 'HI',
+                        readTime: ''));
+                    _list.add(Message(
+                        sentTime: '10:00pm',
+                        ToID: APIs.user.uid,
+                        type: Type.text,
+                        SenderId: 'xyz',
+                        content: 'Hey there',
+                        readTime: ''));
+
                     if (_list.isNotEmpty) {
                       return ListView.builder(
                           itemCount: _list.length,
                           padding: EdgeInsets.only(top: ms.height * 0.02),
                           itemBuilder: (context, index) {
-                            return Text('Message: ${_list[index]}');
+                            return CardMessage(message: _list[index]);
                           });
                     } else {
                       return const Center(
-                        child: Text('No connection',
-                            style: TextStyle(fontSize: 20)),
+                        child: Text('Welcome', style: TextStyle(fontSize: 20)),
                       );
                     }
                 }
@@ -99,14 +120,14 @@ class _ChatPageState extends State<ChatPage> {
                   widget.user.name,
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 2),
                 const Text(
                   'Status',
-                  style: TextStyle(fontSize: 13, color: Colors.amberAccent),
+                  style: TextStyle(fontSize: 13, color: Colors.green),
                 ),
               ],
             ),
@@ -126,55 +147,63 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _chatInput() {
-    return Row(children: [
-      Expanded(
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon:
-                    const Icon(Icons.emoji_emotions, color: Colors.blueAccent),
-              ),
-              Expanded(
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  child: TextField(
-                    onChanged: (text) {
-                      setState(() {
-                        isTextFieldExpanded = text.isNotEmpty;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Message",
-                      border: InputBorder.none,
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.emoji_emotions, color: Colors.blueAccent),
+        ),
+        Expanded(
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    child: TextField(
+                      onChanged: (text) {
+                        setState(() {
+                          isTextFieldExpanded = text.isNotEmpty;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Message",
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              isTextFieldExpanded
-                  ? IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.send, color: Colors.blueAccent),
-                    )
-                  : Row(children: [
-                      IconButton(
+                isTextFieldExpanded
+                    ? IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.camera_alt,
-                            color: Colors.blueAccent),
+                        icon: const Icon(Icons.send, color: Colors.blueAccent),
+                      )
+                    : Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.photo_library,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.photo_library,
-                            color: Colors.blueAccent),
-                      ),
-                    ]),
-            ],
+              ],
+            ),
           ),
         ),
-      )
-    ]);
+      ],
+    );
   }
 }
