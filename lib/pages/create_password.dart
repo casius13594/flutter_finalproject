@@ -135,7 +135,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                                   });
                                 } on FirebaseAuthException catch (e) {
                                   Fluttertoast.showToast(
-                                      msg: "Error linking credentials: $e");
+                                      msg: "Error linking credentials: ${e.message.toString()}");
                                 }
                               }
                             }

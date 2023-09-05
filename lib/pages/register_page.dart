@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'dart:core';
 import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 
@@ -300,6 +301,10 @@ class _RegisterPageState extends State<RegisterPage>{
                                 side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
                                 backgroundColor: Theme.of(context).colorScheme.onSurface,),
                             onPressed: () async {
+                              if(FirebaseAuth.instance.currentUser != null ) {
+                                await GoogleSignIn().disconnect();
+                                await FirebaseAuth.instance.signOut();
+                              }
                               QuerySnapshot querySnapshot = await FirebaseFirestore
                                   .instance
                                   .collection('users')
@@ -318,7 +323,7 @@ class _RegisterPageState extends State<RegisterPage>{
                                   .where(
                                   'phone', isEqualTo: _controllerPhoneNum.text)
                                   .get();
-                              if (!querySnapshot.docs.isEmpty) {
+                              if (!querySnapshot.docs.isEmpty && _controllerPhoneNum.text != "") {
                                 _phoneValidate = true;
                                 _phoneError =
                                 "This phone number is already used for another account";
