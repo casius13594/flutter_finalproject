@@ -1,17 +1,17 @@
 class ChatUserProfile {
-  ChatUserProfile({
-    required this.image,
-    required this.birthdate,
-    required this.address,
-    required this.isActive,
-    required this.lastSeen,
-    required this.phone,
-    required this.name,
-    required this.createdAt,
-    required this.pushToken,
-    required this.email,
-    required this.lastMess,
-  });
+  ChatUserProfile(
+      {required this.image,
+      required this.birthdate,
+      required this.address,
+      required this.isActive,
+      required this.lastSeen,
+      required this.phone,
+      required this.name,
+      required this.createdAt,
+      required this.pushToken,
+      required this.email,
+      required this.lastMess,
+      required this.uid});
   late final String image;
   late final String birthdate;
   late final String address;
@@ -23,7 +23,7 @@ class ChatUserProfile {
   late final String pushToken;
   late final String email;
   late final String lastMess;
-
+  late final String uid;
   ChatUserProfile.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
     birthdate = json['birthdate'] ?? '';
@@ -36,6 +36,7 @@ class ChatUserProfile {
     pushToken = json['push_token'] ?? '';
     email = json['email'] ?? '';
     lastMess = json['lastMess'] ?? '';
+    uid = json['uid'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -51,6 +52,7 @@ class ChatUserProfile {
     data['push_token'] = pushToken;
     data['email'] = email;
     data['lastMess'] = lastMess;
+    data['uid'] = uid;
     return data;
   }
 }

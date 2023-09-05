@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_finalproject/models/message.dart';
 import '../models/chat_user.dart';
 
 class APIs {
@@ -11,12 +12,11 @@ class APIs {
 
   //ChatUserProfile
   static late ChatUserProfile cur_chatUserProfile;
+
+  static User get user => auth.currentUser!;
+
   static Future<void> SelfInfo() async {
-    await firestore
-        .collection('users')
-        .doc(user.uid)
-        .get()
-        .then((user) async {
+    await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         cur_chatUserProfile = ChatUserProfile.fromJson(user.data()!);
       } else {
@@ -25,7 +25,6 @@ class APIs {
     });
   }
 
-  static User get user => auth.currentUser!;
   static Future<bool> checkUserExist() async {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
   }
@@ -43,7 +42,8 @@ class APIs {
         createdAt: time,
         pushToken: '',
         email: user.email.toString(),
-        lastMess: "Welcome to Chat Box");
+        lastMess: "Welcome to Chat Box",
+        uid: user.uid.toString());
     return await firestore
         .collection('users')
         .doc(user.uid)
@@ -57,10 +57,31 @@ class APIs {
         .snapshots();
   }
 
-  //ChatMess 
-   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMess() {
+  //ChatMess
+
+  static String getConversationID(String id) => user.uid.hashCode <= id.hashCode
+      ? '${user.uid}_$id'
+      : '${id}_${user.uid}';
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMess(
+      ChatUserProfile user) {
     return firestore
-        .collection('messages')
+        .collection('chats/${getConversationID(user.uid)}/messages/')
         .snapshots();
+  }
+
+  static Future<void> sendMessage(
+      ChatUserProfile chatUserProfile, String content) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    final Message message = Message(
+        sentTime: time,
+        ToID: chatUserProfile.uid,
+        type: Type.text,
+        SenderId: user.uid,
+        content: content,
+        readTime: '');
+    final ref = firestore.collection(
+        'chats/${getConversationID(chatUserProfile.uid)}/messages/');
+    await ref.doc(time).set(message.toJson());
   }
 }

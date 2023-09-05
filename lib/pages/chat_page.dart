@@ -22,6 +22,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<Message> _list = [];
   bool isTextFieldExpanded = false;
+  final _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,36 +35,19 @@ class _ChatPageState extends State<ChatPage> {
         body: Column(children: [
           Expanded(
             child: StreamBuilder(
-              stream: APIs.getAllMess(),
+              stream: APIs.getAllMess(widget.user),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   //check data loading
                   case ConnectionState.waiting:
                   case ConnectionState.none:
-                  // return const Center(child: CircularProgressIndicator());
+                    return const SizedBox();
                   case ConnectionState.active:
                   case ConnectionState.done:
                     final data = snapshot.data?.docs;
-                    //list = data
-                    //       ?.map((e) => ChatUserProfile.fromJson(e.data()))
-                    //        .toList() ??
-                    //    [];
-                    _list.clear();
-                    _list.add(Message(
-                        sentTime: '10:00pm',
-                        ToID: 'xyz',
-                        type: Type.text,
-                        SenderId: APIs.user.uid,
-                        content: 'HI',
-                        readTime: ''));
-                    _list.add(Message(
-                        sentTime: '10:00pm',
-                        ToID: APIs.user.uid,
-                        type: Type.text,
-                        SenderId: 'xyz',
-                        content: 'Hey there',
-                        readTime: ''));
-
+                    _list =
+                        data?.map((e) => Message.fromJson(e.data())).toList() ??
+                            [];
                     if (_list.isNotEmpty) {
                       return ListView.builder(
                           itemCount: _list.length,
@@ -169,6 +153,9 @@ class _ChatPageState extends State<ChatPage> {
                           isTextFieldExpanded = text.isNotEmpty;
                         });
                       },
+                      controller: _textController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                       decoration: InputDecoration(
                         hintText: "Message",
                         border: InputBorder.none,
@@ -178,7 +165,12 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 isTextFieldExpanded
                     ? IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (_textController.text.isNotEmpty) {
+                            APIs.sendMessage(widget.user, _textController.text);
+                            _textController.text = '';
+                          }
+                        },
                         icon: const Icon(Icons.send, color: Colors.blueAccent),
                       )
                     : Row(
