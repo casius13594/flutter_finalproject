@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
+import 'package:flutter_finalproject/pages/chat_page.dart';
 import '../pages/message_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -17,7 +18,10 @@ class _ChatUserState extends State<ChatUser> {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => ChatPage(user: widget.user)));
+        },
         child: ListTile(
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(ms.height * .03),
