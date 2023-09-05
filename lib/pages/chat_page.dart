@@ -20,6 +20,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<Message> _list = [];
   bool isTextFieldExpanded = false;
   final _textController = TextEditingController();
@@ -41,7 +42,7 @@ class _ChatPageState extends State<ChatPage> {
                   //check data loading
                   case ConnectionState.waiting:
                   case ConnectionState.none:
-                    return const SizedBox();
+                    // return const SizedBox();
                   case ConnectionState.active:
                   case ConnectionState.done:
                     final data = snapshot.data?.docs;
@@ -54,7 +55,9 @@ class _ChatPageState extends State<ChatPage> {
                           padding: EdgeInsets.only(top: ms.height * 0.02),
                           itemBuilder: (context, index) {
                             return CardMessage(message: _list[index]);
-                          });
+                          },
+                        addAutomaticKeepAlives: true,
+                          );
                     } else {
                       return const Center(
                         child: Text('Welcome', style: TextStyle(fontSize: 20)),
@@ -64,7 +67,10 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
-          _chatInput()
+          Form(
+            key: _formKey,
+            child: _chatInput(),
+          )
         ]),
       ),
     );
@@ -147,7 +153,8 @@ class _ChatPageState extends State<ChatPage> {
                 Expanded(
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 300),
-                    child: TextField(
+                    child: TextFormField(
+                      key: Key('messageField'),
                       onChanged: (text) {
                         setState(() {
                           isTextFieldExpanded = text.isNotEmpty;

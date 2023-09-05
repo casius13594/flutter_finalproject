@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_finalproject/models/message.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/chat_user.dart';
+import 'dart:typed_data';
 
 class APIs {
   //log in - verfication
@@ -83,5 +86,28 @@ class APIs {
     final ref = firestore.collection(
         'chats/${getConversationID(chatUserProfile.uid)}/messages/');
     await ref.doc(time).set(message.toJson());
+  }
+
+  static Future<Uint8List?> getImage() async{
+    final FirebaseStorage storage = FirebaseStorage.instance;
+
+    // Specify the path (name) of the image in Firebase Storage
+    final String imagePath = 'images/${FirebaseAuth.instance.currentUser?.email}'; // Replace with your image path
+
+    // Get the reference to the image
+    final Reference imageRef = storage.ref().child(imagePath);
+
+    // Load the downloaded image into a MemoryImage
+    final Uint8List? imageBytes = await imageRef.getData();
+    return imageBytes;
+  }
+
+  pickImage(ImageSource source) async{
+    final ImagePicker _imagePicker = ImagePicker();
+    XFile? _file = await _imagePicker.pickImage(source: source);
+    if(_file != null){
+      return await _file.readAsBytes();
+    }
+    print('No Images Selected');
   }
 }

@@ -11,7 +11,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -23,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-
   _handleGoogleLogin() {
     _signInWithGoogle().then((user) async {
       log('\nUser: ${user.user}');
@@ -34,8 +32,8 @@ class _LoginPageState extends State<LoginPage> {
             context, MaterialPageRoute(builder: (context) => shiftscreen()));
       } else {
         APIs.SelfInfo().then((value) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CreatePasswordPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CreatePasswordPage()));
         });
       }
     });
@@ -222,16 +220,14 @@ class _LoginPageState extends State<LoginPage> {
                               .then((value) {
                             FirebaseFirestore.instance
                                 .collection('users')
-                                .doc(FirebaseAuth.instance.currentUser?.email)
+                                .doc(FirebaseAuth.instance.currentUser?.uid.toString())
                                 .update({
                               'is_active': true,
-                              'last_seen' : DateTime.now().microsecondsSinceEpoch.toString()
-                                });
-                            Navigator.push(
-                                context,
+                              'last_seen': DateTime.now().microsecondsSinceEpoch.toString()
+                            });
+                            Navigator.push(context,
                                 MaterialPageRoute(
-                                    builder: (context) => shiftscreen
-                                        .withData(_controllerEmail.text)));
+                                    builder: (context) => shiftscreen.withData(_controllerEmail.text)));
                           }).onError((error, stackTrace) {
                             print("Error ${error.toString()} ");
                           });
@@ -293,11 +289,10 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(width: 5),
                         TextButton(
                           onPressed: () async {
-                            if(FirebaseAuth.instance.currentUser != null ) {
-
+                            if (FirebaseAuth.instance.currentUser != null) {
                               await FirebaseAuth.instance.signOut();
                             }
-                            if(GoogleSignIn().currentUser != null) {
+                            if (GoogleSignIn().currentUser != null) {
                               await GoogleSignIn().disconnect();
                             }
                             _handleGoogleLogin();
