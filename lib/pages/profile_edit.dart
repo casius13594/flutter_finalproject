@@ -114,26 +114,23 @@ class _ProfileEditingState extends State<ProfileEditing>{
                   ),
                   Positioned(child: IconButton(
                     onPressed: () async {
-                      final status = await Permission.storage.request();
-                      if (status.isGranted)
-                        {
-                          ImagePicker imagePicker = ImagePicker();
-                          XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-                          print('${file?.path}');
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+                      print('${file?.path}');
 
-                          if(file == null) return;
+                      if(file == null) return;
 
-                          Reference referenceDirImages = FirebaseStorage.instance.ref().child('images');
-                          Reference imgToUpload = referenceDirImages.child(FirebaseAuth.instance.currentUser!.email.toString());
-                          try{
-                            await imgToUpload.putFile(File(file.path));
-                            imageUrl = await imgToUpload.getDownloadURL();
-                          }catch(error){}
-                        }
-                      else if (status.isPermanentlyDenied) {
-                        openAppSettings();
-                      } else Fluttertoast.showToast(msg: 'Please allow permission');
+                      Reference referenceDirImages = FirebaseStorage.instance.ref().child('images');
+                      Reference imgToUpload = referenceDirImages.child(FirebaseAuth.instance.currentUser!.email.toString());
+                      try{
+                        await imgToUpload.putFile(File(file.path));
+                        imageUrl = await imgToUpload.getDownloadURL();
+                      }on FirebaseAuthException catch(e){
+                        Fluttertoast.showToast(msg: e.message.toString());
+                      }
+                      setState(() {
 
+                      });
 
 
                     },
