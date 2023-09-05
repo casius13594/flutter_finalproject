@@ -25,7 +25,6 @@ class _MessagePageState extends State<MessagePage> {
   @override
   void initState() {
     super.initState();
-    APIs.SelfInfo();
   }
 
   @override

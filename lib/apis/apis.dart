@@ -14,7 +14,7 @@ class APIs {
   static Future<void> SelfInfo() async {
     await firestore
         .collection('users')
-        .doc(user.email)
+        .doc(user.uid)
         .get()
         .then((user) async {
       if (user.exists) {

@@ -7,6 +7,7 @@ import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:pinput/pinput.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_finalproject/apis/apis.dart';
 
 class PhoneVerify extends StatefulWidget {
   String email = "";
@@ -73,19 +74,8 @@ class _PhoneVerifyState extends State<PhoneVerify> {
     });
     if (isEmailVerified) {
       _timerCheckVerified.cancel();
-      FirebaseFirestore.instance.collection('users').add({
-        'address': address1,
-        'birthdate': "",
-        'created_at': DateTime.now(),
-        'email': email1,
-        'image': auth.currentUser?.photoURL.toString(),
-        'is_active': false,
-        'lastMess': 'Welcome to Chat Box',
-        'last_seen': DateTime.now(),
-        'name': name1,
-        'phone': phone1,
-        'push_token': "",
-      });
+      Fluttertoast.showToast(msg: 'Your email is successfully verified.');
+      APIs.SelfInfo();
     }
   }
 
@@ -144,7 +134,7 @@ class _PhoneVerifyState extends State<PhoneVerify> {
                     ),
                     icon: Icon(Icons.email, size: 32),
                     label: Text(
-                      'Resent Email',
+                      'Resend Email',
                       style: TextStyle(fontSize: 24),
                     ),
                     onPressed: () {

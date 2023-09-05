@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => shiftscreen()));
       } else {
-        APIs.createUser().then((value) {
+        APIs.SelfInfo().then((value) {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => CreatePasswordPage()));
         });
@@ -225,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                                 .doc(FirebaseAuth.instance.currentUser?.email)
                                 .update({
                               'is_active': true,
-                              'last_seen' : DateTime.now()
+                              'last_seen' : DateTime.now().microsecondsSinceEpoch.toString()
                                 });
                             Navigator.push(
                                 context,
@@ -294,8 +294,11 @@ class _LoginPageState extends State<LoginPage> {
                         TextButton(
                           onPressed: () async {
                             if(FirebaseAuth.instance.currentUser != null ) {
-                              await GoogleSignIn().disconnect();
+
                               await FirebaseAuth.instance.signOut();
+                            }
+                            if(GoogleSignIn().currentUser != null) {
+                              await GoogleSignIn().disconnect();
                             }
                             _handleGoogleLogin();
                           },

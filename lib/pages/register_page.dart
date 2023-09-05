@@ -302,8 +302,10 @@ class _RegisterPageState extends State<RegisterPage>{
                                 backgroundColor: Theme.of(context).colorScheme.onSurface,),
                             onPressed: () async {
                               if(FirebaseAuth.instance.currentUser != null ) {
-                                await GoogleSignIn().disconnect();
                                 await FirebaseAuth.instance.signOut();
+                              }
+                              if(GoogleSignIn().currentUser != null) {
+                                await GoogleSignIn().disconnect();
                               }
                               QuerySnapshot querySnapshot = await FirebaseFirestore
                                   .instance
