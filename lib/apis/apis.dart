@@ -56,4 +56,11 @@ class APIs {
         .where('email', isNotEqualTo: user.email)
         .snapshots();
   }
+
+  //ChatMess 
+   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMess() {
+    return firestore
+        .collection('messages')
+        .snapshots();
+  }
 }
