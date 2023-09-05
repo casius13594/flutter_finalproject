@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/utilities/dateutil.dart';
 import 'package:get/get.dart';
 import '../models/message.dart';
 import '../apis/apis.dart';
@@ -23,9 +24,18 @@ class _CardMessageState extends State<CardMessage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          widget.message.sentTime,
-          style: TextStyle(fontSize: 13, color: Colors.black54),
+        Row(
+          children: [
+            SizedBox(width: ms.width * .04),
+            if (widget.message.readTime.isNotEmpty)
+              const Icon(Icons.done_all_rounded, color: Colors.blue, size: 20),
+            const SizedBox(width: 2),
+            Text(
+              MyDateUtil.getFormattedTime(
+                  context: context, time: widget.message.sentTime),
+              style: TextStyle(fontSize: 13, color: Colors.black54),
+            ),
+          ],
         ),
         Flexible(
           child: Container(
@@ -71,10 +81,19 @@ class _CardMessageState extends State<CardMessage> {
             ),
           ),
         ),
-        Text(
-          widget.message.sentTime,
-          style: TextStyle(fontSize: 13, color: Colors.black54),
-        )
+        Row(
+          children: [
+            if (widget.message.readTime.isNotEmpty)
+              const Icon(Icons.done_all_rounded, color: Colors.blue, size: 20),
+            const SizedBox(width: 2),
+            Text(
+              MyDateUtil.getFormattedTime(
+                  context: context, time: widget.message.sentTime),
+              style: TextStyle(fontSize: 13, color: Colors.black54),
+            ),
+            SizedBox(width: ms.width * .04),
+          ],
+        ),
       ],
     );
   }

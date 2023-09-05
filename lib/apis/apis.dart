@@ -88,11 +88,16 @@ class APIs {
     await ref.doc(time).set(message.toJson());
   }
 
-  static Future<Uint8List?> getImage() async{
+  //update status of message
+  static Future<void> updateMessStatus(Message message) async {}
+
+  //image
+  static Future<Uint8List?> getImage() async {
     final FirebaseStorage storage = FirebaseStorage.instance;
 
     // Specify the path (name) of the image in Firebase Storage
-    final String imagePath = 'images/${FirebaseAuth.instance.currentUser?.email}'; // Replace with your image path
+    final String imagePath =
+        'images/${FirebaseAuth.instance.currentUser?.email}'; // Replace with your image path
 
     // Get the reference to the image
     final Reference imageRef = storage.ref().child(imagePath);
@@ -102,10 +107,10 @@ class APIs {
     return imageBytes;
   }
 
-  pickImage(ImageSource source) async{
+  pickImage(ImageSource source) async {
     final ImagePicker _imagePicker = ImagePicker();
     XFile? _file = await _imagePicker.pickImage(source: source);
-    if(_file != null){
+    if (_file != null) {
       return await _file.readAsBytes();
     }
     print('No Images Selected');
