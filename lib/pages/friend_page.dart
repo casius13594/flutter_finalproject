@@ -102,6 +102,7 @@ class _FriendPageState extends State<Friendpage>{
       setState(() {
         print('Set state');
         listfriend_state.clear();
+        listfriend_state_withName.clear();
         listfriend_state.addAll(emailUsersState3);
         listfriend_state.addAll(emailUsersState1);
         listfriend_state.addAll(emailUsersState2);
