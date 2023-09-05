@@ -54,7 +54,6 @@ class _HomePageState extends State<Homepage>{
   void initState() {
     super.initState();
     _initLocation();
-    _startQuery();
   }
 
   @override
@@ -73,6 +72,7 @@ class _HomePageState extends State<Homepage>{
       var location = await locationService.getLocation();
       setState(() {
         _currentLocation = location;
+        _updateGeoPoint();
       });
 
       // Listen for location changes and update Firestore geopoint
