@@ -28,6 +28,7 @@ class _HomePageState extends State<Homepage>{
   GeoFlutterFire geo = GeoFlutterFire();
   late Stream<dynamic> query;
   late StreamSubscription subscription;
+  StreamSubscription<LocationData>? locationSubscription;
 
 
   @override
@@ -56,6 +57,14 @@ class _HomePageState extends State<Homepage>{
     _startQuery();
   }
 
+  @override
+  void dispose() {
+    mapController.dispose();
+    locationSubscription?.cancel();
+    subscription.cancel(); // Cancel the stream subscription when disposing of the widget
+    super.dispose();
+  }
+
   void _initLocation() async {
     var locationService = Location();
     var status = await locationService.requestPermission();
@@ -65,16 +74,16 @@ class _HomePageState extends State<Homepage>{
       setState(() {
         _currentLocation = location;
       });
+
+      // Listen for location changes and update Firestore geopoint
+/*      locationSubscription = locationService.onLocationChanged.listen((LocationData newLocation) async {
+        if (!mounted) return;
+
+        setState(() {
+          _currentLocation = newLocation;
+        });
+      });*/
     }
-
-    location.onLocationChanged.listen((LocationData newLocation) async {
-      setState(() {
-        _currentLocation = newLocation;
-      });
-
-      // Update Firestore with the new location
-      await _updateGeoPoint();
-    });
   }
 
   Widget _buildMap() {
@@ -90,7 +99,7 @@ class _HomePageState extends State<Homepage>{
             zoom: 15.0,
           ),
           onMapCreated: _onMapCreated,
-          myLocationEnabled: true,
+          myLocationEnabled: false,
           mapType: MapType.hybrid,
           markers: markers,
         ),
@@ -99,16 +108,7 @@ class _HomePageState extends State<Homepage>{
             right: 10,
             child:
             TextButton(
-                child: Icon(Icons.pin_drop),
-                onPressed: () => _startQuery()
-            )
-        ),
-        Positioned(
-            bottom: 250,
-            right: 10,
-            child:
-            TextButton(
-                child: Icon(Icons.pin_drop),
+                child: Icon(Icons.refresh),
                 onPressed: () => _updateGeoPoint()
             )
         ),
@@ -150,6 +150,26 @@ class _HomePageState extends State<Homepage>{
     _startQuery();
   }
 
+  _startQuery() async {
+    // Get users location
+    var pos = await location.getLocation();
+    double lat = pos.latitude!;
+    double lng = pos.longitude!;
+    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+
+    // Set a radius for query (in kilometers)
+    double radius = 5;
+
+    var collectionReference = firestore.collection('locations');
+    var stream = geo.collection(collectionRef: collectionReference).within(
+      center: center,
+      radius: radius,
+      field: 'position',
+    );
+
+    subscription = stream.listen(_updateMarkers);
+  }
+
   void _updateMarkers(List<DocumentSnapshot> documentList) {
     print(documentList);
     setState(() {
@@ -180,29 +200,7 @@ class _HomePageState extends State<Homepage>{
     });
   }
 
-  _startQuery() async {
-    // Get users location
-    var pos = await location.getLocation();
-    double lat = pos.latitude!;
-    double lng = pos.longitude!;
-    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
 
-    // Set a radius for query (in kilometers)
-    double radius = 5;
 
-    var collectionReference = firestore.collection('locations');
-    var stream = geo.collection(collectionRef: collectionReference).within(
-      center: center,
-      radius: radius,
-      field: 'position',
-    );
 
-    subscription = stream.listen(_updateMarkers);
-  }
-
-  @override
-  void dispose() {
-    subscription.cancel(); // Cancel the stream subscription when disposing of the widget
-    super.dispose();
-  }
 }
