@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/apis/add_data.dart';
 import 'package:flutter_finalproject/pages/login_page.dart';
 import 'package:flutter_finalproject/pages/register_page.dart';
 import 'package:pinput/pinput.dart';
@@ -10,20 +11,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_finalproject/apis/apis.dart';
 
 class PhoneVerify extends StatefulWidget {
-  String email = "";
-  String password = "";
   String name = "";
-  String address = "";
-  String phone = "";
+  String email = "";
 
   PhoneVerify();
 
   PhoneVerify.withData(
-      this.name, this.phone, this.email, this.address, this.password);
+      this.name);
+  PhoneVerify.changeEmail(
+      this.email);
 
   @override
   State<StatefulWidget> createState() =>
-      _PhoneVerifyState(name, phone, email, address, password);
+      _PhoneVerifyState(name, email);
 }
 
 class _PhoneVerifyState extends State<PhoneVerify> {
@@ -31,18 +31,12 @@ class _PhoneVerifyState extends State<PhoneVerify> {
   bool canResendEmail = false;
   final FirebaseAuth auth = FirebaseAuth.instance;
   String name1 = "";
-  String phone1 = "";
-  String email1 = "";
-  String password1 = "";
-  String address1 = "";
+  String oldEmail = "";
 
-  _PhoneVerifyState(String name, String phone, String email, String address,
-      String password) {
+
+  _PhoneVerifyState(String name, String email) {
     name1 = name;
-    phone1 = phone;
-    email1 = email;
-    address1 = address;
-    password1 = password;
+    oldEmail = email;
   }
 
   late Timer _timerCheckVerified;
@@ -60,9 +54,20 @@ class _PhoneVerifyState extends State<PhoneVerify> {
     }
   }
 
+  void reverseEmail() async {
+    if(!isEmailVerified) {
+      await auth.currentUser?.updateEmail(oldEmail);
+      DocumentReference documentReference = firestore.collection('users').doc(auth.currentUser?.uid);
+      await documentReference.update({
+        'email' : oldEmail,
+      });
+      Fluttertoast.showToast(msg: 'Email edition is reversed.');
+  }
+  }
+
   @override
   void dispose() {
-
+    if(oldEmail != "") reverseEmail();
     _timerCheckVerified.cancel();
     super.dispose();
   }
@@ -74,6 +79,7 @@ class _PhoneVerifyState extends State<PhoneVerify> {
     });
     if (isEmailVerified) {
       _timerCheckVerified.cancel();
+      if(name1 != "") await auth.currentUser?.updateDisplayName(name1);
       Fluttertoast.showToast(msg: 'Your email is successfully verified.');
       APIs.SelfInfo();
     }

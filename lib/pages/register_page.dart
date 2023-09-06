@@ -20,16 +20,14 @@ class RegisterPage extends StatefulWidget{
 
 class _RegisterPageState extends State<RegisterPage>{
   final TextEditingController _controllerName = TextEditingController();
-  final TextEditingController _controllerPhoneNum = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
-  final TextEditingController _controllerAddress = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   bool _nameValidate = false;
-  bool _phoneValidate = false;
+
   bool _emailValidate = false;
   bool _passwordValidate = false;
   String _emailError = '';
-  String _phoneError = '';
+
   String _passwordError = '';
   CountryCode selectedCountry = CountryCode(name: "Việt Nam", flagUri: "flags/vn.png", code: "VN", dialCode: "+84");
 
@@ -110,65 +108,6 @@ class _RegisterPageState extends State<RegisterPage>{
                 ),
 
                 SizedBox(height: 20,),
-                //Your phone
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    'Your Phone',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      fontSize:  20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5,),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      width: 2.0, // Adjust the width as needed
-                    ),
-                  ),
-                  child: Row(children: [
-                    Container(
-                      child: CountryCodePicker(
-                        initialSelection: 'VN',
-                        favorite: ['+84', 'VN'],
-                        showCountryOnly: true,
-                        onChanged: (CountryCode countryCode) {
-                          setState(() {
-                            selectedCountry = countryCode;
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: _controllerPhoneNum,
-                        keyboardType: TextInputType.phone,
-                        style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onTertiaryContainer),
-                        decoration: InputDecoration(
-                          errorText: _phoneValidate ? _phoneError : null,
-                          hintText: 'Phone',
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onTertiaryContainer),
-                          border: InputBorder.none, // Remove the default border
-                          contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10.0),
-                        ),
-                      ),
-                    ),
-                  ]),
-                ),
-
-                SizedBox(height: 20,),
                 // Email
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -199,43 +138,6 @@ class _RegisterPageState extends State<RegisterPage>{
                       ),
                       fillColor: Theme.of(context).colorScheme.tertiaryContainer,
                       hintText: 'Email',
-                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      )
-                  ),
-                ),
-
-                SizedBox(height: 20,),
-                //Address
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    'Address',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      fontSize:  20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5,),
-                TextField(
-                  controller: _controllerAddress,
-                  style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
-                            width: 2),
-                      ),
-                      fillColor: Theme.of(context).colorScheme.tertiaryContainer,
-                      hintText: 'Address',
                       hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -320,18 +222,6 @@ class _RegisterPageState extends State<RegisterPage>{
                               } else {
                                 _emailValidate = false;
                               }
-                              querySnapshot = await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .where(
-                                  'phone', isEqualTo: _controllerPhoneNum.text)
-                                  .get();
-                              if (!querySnapshot.docs.isEmpty && _controllerPhoneNum.text != "") {
-                                _phoneValidate = true;
-                                _phoneError =
-                                "This phone number is already used for another account";
-                              } else {
-                                _phoneValidate = false;
-                              }
 
                               setState(() {
                                 _controllerName.text.isEmpty ?
@@ -353,18 +243,8 @@ class _RegisterPageState extends State<RegisterPage>{
                                   _passwordValidate = false;
                               });
 
-                              String phoneNum = "";
-                              if (_controllerPhoneNum.text.startsWith('0'))
-                                phoneNum = selectedCountry.dialCode.toString() +
-                                    _controllerPhoneNum.text.substring(1);
-                              else if (_controllerPhoneNum.text.isEmpty)
-                                phoneNum = "";
-                              else
-                                phoneNum = selectedCountry.dialCode.toString() +
-                                    _controllerPhoneNum.text;
 
-                              if (!_nameValidate && !_phoneValidate &&
-                                  !_passwordValidate && !_emailValidate) {
+                              if (!_nameValidate && !_passwordValidate && !_emailValidate) {
                                   await FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
                                       email: _controllerEmail.text.trim(),
@@ -373,11 +253,7 @@ class _RegisterPageState extends State<RegisterPage>{
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) =>
                                             PhoneVerify.withData(
-                                                _controllerName.text,
-                                                phoneNum,
-                                                _controllerEmail.text,
-                                                _controllerAddress.text,
-                                                _controllerPassword.text)
+                                                _controllerName.text)
                                         )
                                     );
                                   }

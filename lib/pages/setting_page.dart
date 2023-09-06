@@ -28,7 +28,8 @@ class Settingpage extends StatefulWidget {
 class _SettingPageState extends State<Settingpage> {
   late double height, width;
 
-  changetheme _switch = changetheme(false);
+  //changetheme _switch = changetheme(false);
+
 
   @override
   Widget build(BuildContext context) {

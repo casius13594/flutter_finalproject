@@ -37,10 +37,8 @@ class APIs {
     final chatUserProfile = ChatUserProfile(
         image: user.photoURL.toString(),
         birthdate: '',
-        address: '',
         isActive: false,
         lastSeen: time,
-        phone: user.phoneNumber.toString(),
         name: user.displayName.toString(),
         createdAt: time,
         pushToken: '',
@@ -94,14 +92,11 @@ class APIs {
   //image
   static Future<Uint8List?> getImage() async {
     final FirebaseStorage storage = FirebaseStorage.instance;
-
     // Specify the path (name) of the image in Firebase Storage
     final String imagePath =
         'images/${FirebaseAuth.instance.currentUser?.email}'; // Replace with your image path
-
     // Get the reference to the image
     final Reference imageRef = storage.ref().child(imagePath);
-
     // Load the downloaded image into a MemoryImage
     final Uint8List? imageBytes = await imageRef.getData();
     return imageBytes;

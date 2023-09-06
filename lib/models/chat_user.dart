@@ -2,10 +2,8 @@ class ChatUserProfile {
   ChatUserProfile(
       {required this.image,
       required this.birthdate,
-      required this.address,
       required this.isActive,
       required this.lastSeen,
-      required this.phone,
       required this.name,
       required this.createdAt,
       required this.pushToken,
@@ -14,10 +12,8 @@ class ChatUserProfile {
       required this.uid});
   late final String image;
   late final String birthdate;
-  late final String address;
   late final bool isActive;
   late final String lastSeen;
-  late final String phone;
   late final String name;
   late final String createdAt;
   late final String pushToken;
@@ -27,10 +23,8 @@ class ChatUserProfile {
   ChatUserProfile.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? '';
     birthdate = json['birthdate'] ?? '';
-    address = json['address'] ?? '';
     isActive = json['is_active'] ?? '';
     lastSeen = json['last_seen'] ?? '';
-    phone = json['phone'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
     pushToken = json['push_token'] ?? '';
@@ -43,10 +37,8 @@ class ChatUserProfile {
     final data = <String, dynamic>{};
     data['image'] = image;
     data['birthdate'] = birthdate;
-    data['address'] = address;
     data['is_active'] = isActive;
     data['last_seen'] = lastSeen;
-    data['phone'] = phone;
     data['name'] = name;
     data['created_at'] = createdAt;
     data['push_token'] = pushToken;
