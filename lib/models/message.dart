@@ -20,7 +20,7 @@ class Message {
     type = json['type'].toString() == Type.image.name ? Type.image : Type.text;
     SenderId = json['SenderId'].toString();
     content = json['content'].toString();
-    readTime = json['read_time '].toString();
+    readTime = json['read_time'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -30,7 +30,7 @@ class Message {
     data['type'] = type.name;
     data['SenderId'] = SenderId;
     data['content'] = content;
-    data['read_time '] = readTime;
+    data['read_time'] = readTime;
     return data;
   }
 }

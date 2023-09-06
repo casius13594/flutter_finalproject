@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/utilities/dateutil.dart';
 import 'package:get/get.dart';
@@ -60,6 +62,14 @@ class _CardMessageState extends State<CardMessage> {
   }
 
   Widget _blackMessage() {
+    if (widget.message.readTime.isEmpty) {
+      print('Updating read_time for message: ${widget.message.sentTime}');
+      APIs.updateMessStatus(widget.message);
+      log('message read updated');
+    } else {
+      print(
+          'Message readTime is empty for message: ${widget.message.sentTime}');
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -83,9 +93,6 @@ class _CardMessageState extends State<CardMessage> {
         ),
         Row(
           children: [
-            if (widget.message.readTime.isNotEmpty)
-              const Icon(Icons.done_all_rounded, color: Colors.blue, size: 20),
-            const SizedBox(width: 2),
             Text(
               MyDateUtil.getFormattedTime(
                   context: context, time: widget.message.sentTime),

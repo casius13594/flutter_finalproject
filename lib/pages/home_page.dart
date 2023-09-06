@@ -151,30 +151,64 @@ class _HomePageState extends State<Homepage>{
   }
 
   _startQuery() async {
-    // Get users location
-    var pos = await location.getLocation();
-    double lat = pos.latitude!;
-    double lng = pos.longitude!;
-    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+    // Get the current user
+    var user = FirebaseAuth.instance.currentUser;
 
-    // Set a radius for query (in kilometers)
-    double radius = 5;
+    if (user != null) {
+      String? userIdentifier = user.email;
 
-    var collectionReference = firestore.collection('locations');
-    var stream = geo.collection(collectionRef: collectionReference).within(
-      center: center,
-      radius: radius,
-      field: 'position',
-    );
+      // Query the "friend" collection for documents where "state" is 2 and the current user's email is either in "friend 1"
+      var friendQuery = firestore.collection('friend')
+          .where('state', isEqualTo: 2)
+          .where('friend1', isEqualTo: userIdentifier)
+          .get();
 
-    subscription = stream.listen(_updateMarkers);
+      // Retrieve the "friend 2" emails from the query results
+      var friendEmails = (await friendQuery).docs.map((doc) => doc['friend2']).toList();
+
+      // Query the "friend" collection again for documents where "state" is 2 and the current user's email is in "friend 2"
+      var friendQuery2 = firestore.collection('friend')
+          .where('state', isEqualTo: 2)
+          .where('friend2', isEqualTo: userIdentifier)
+          .get();
+
+      // Retrieve the "friend 1" emails from the second query results
+      var friendEmails2 = (await friendQuery2).docs.map((doc) => doc['friend1']).toList();
+
+      // Combine both lists of friend emails
+      var emailsMarker = [...friendEmails, ...friendEmails2, userIdentifier];
+
+      // Get users location
+      var pos = await location.getLocation();
+      double lat = pos.latitude!;
+      double lng = pos.longitude!;
+      GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+
+      // Set a radius for the query (in kilometers)
+      double radius = 5;
+
+      // Query the "locations" collection for documents where the email is in the emailsMarker list
+      var firestoreQuery = firestore.collection('locations').where('email', whereIn: emailsMarker);
+
+      var stream = geo.collection(collectionRef: firestoreQuery).within(
+        center: center,
+        radius: radius,
+        field: 'position',
+      );
+
+      // Listen to the locationQuery stream and update the markers
+      subscription = stream.listen(_updateMarkers);
+    }
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
-    print(documentList);
+    var user = FirebaseAuth.instance.currentUser;
+    String? currentUserEmail = user?.email;
+
     setState(() {
       markers.clear();
     });
+
     documentList.forEach((DocumentSnapshot document) {
       final data = document.data() as Map<String, dynamic>?;
 
@@ -192,6 +226,14 @@ class _HomePageState extends State<Homepage>{
             ),
           );
 
+          // Check if the marker corresponds to the current user's email
+          if (currentUserEmail != null && markerTitle == currentUserEmail) {
+            // Customize the marker for the current user
+            marker = marker.copyWith(
+              iconParam: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            );
+          }
+
           setState(() {
             markers.add(marker); // Add the marker to the set
           });
@@ -199,8 +241,5 @@ class _HomePageState extends State<Homepage>{
       }
     });
   }
-
-
-
 
 }
