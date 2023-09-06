@@ -89,7 +89,13 @@ class APIs {
   }
 
   //update status of message
-  static Future<void> updateMessStatus(Message message) async {}
+  static Future<void> updateMessStatus(Message message) async {
+    firestore
+        .collection('chats/${getConversationID(message.SenderId)}/messages')
+        .doc(message.sentTime)
+        .update(
+            {'read_time': DateTime.now().millisecondsSinceEpoch.toString()});
+  }
 
   //image
   static Future<Uint8List?> getImage() async {
