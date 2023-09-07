@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_finalproject/models/chat_user.dart';
+import 'package:flutter_finalproject/pages/chat_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 
 class Friendpage extends StatefulWidget{
@@ -192,49 +194,56 @@ class _FriendPageState extends State<Friendpage>{
                 Map<String, dynamic> item = listfriend_state_withName[index];
                 return Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
-                  child: ListTile(
-                    title: Text(item['name']),
-                    leading: Icon(
-                      Icons.person,
-                    ),
-                    trailing: (item['state']!=3)?
-                        Row(mainAxisSize: MainAxisSize.min,
-                          children: <Widget> [
-                            is_online(item['is_active']),
-                            SizedBox(width: 5),
-                            ElevatedButton(
+                  child: InkWell(
+                    onTap: (){
+                      ChatUserProfile user_chat = ChatUserProfile.fromJson(item);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => ChatPage(user: user_chat)));
+                    },
+                    child: ListTile(
+                      title: Text(item['name']),
+                      leading: Icon(
+                        Icons.person,
+                      ),
+                      trailing: (item['state']!=3)?
+                          Row(mainAxisSize: MainAxisSize.min,
+                            children: <Widget> [
+                              is_online(item['is_active']),
+                              SizedBox(width: 5),
+                              ElevatedButton(
+                                  onPressed: (){
+                                    if(item['state'] == 0)
+                                    {
+                                      addFriendState(email_current, item['email'], 1, index);
+                                      addFriendState(item['email'], email_current, 3, -1);
+                                    }
+                                  },
+                                  child: liststate(item['state']),
+                                ),
+                            ],
+                          )
+                          : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              is_online(item['is_active']),
+                              ElevatedButton(
                                 onPressed: (){
-                                  if(item['state'] == 0)
-                                  {
-                                    addFriendState(email_current, item['email'], 1, index);
-                                    addFriendState(item['email'], email_current, 3, -1);
-                                  }
+                                  deleteFriendState(email_current, item['email'], 0, index);
+                                  deleteFriendState(item['email'], email_current, 0, -1);
                                 },
-                                child: liststate(item['state']),
+                                child: Text('Reject',),
                               ),
-                          ],
-                        )
-                        : Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            is_online(item['is_active']),
-                            ElevatedButton(
-                              onPressed: (){
-                                deleteFriendState(email_current, item['email'], 0, index);
-                                deleteFriendState(item['email'], email_current, 0, -1);
-                              },
-                              child: Text('Reject',),
-                            ),
-                            ElevatedButton(
-                              onPressed: (){
-                                updateFriendState(email_current, item['email'], 2, index);
-                                updateFriendState(item['email'], email_current, 2, -1);
-                              },
-                              child: Text('Accept'),
-                            ),
-                          ],
-                        ),
-                    // Replace 'name' with the field you want to display// Replace 'description' as needed
+                              ElevatedButton(
+                                onPressed: (){
+                                  updateFriendState(email_current, item['email'], 2, index);
+                                  updateFriendState(item['email'], email_current, 2, -1);
+                                },
+                                child: Text('Accept'),
+                              ),
+                            ],
+                          ),
+                      // Replace 'name' with the field you want to display// Replace 'description' as needed
+                    ),
                   ),
                 );
               },
