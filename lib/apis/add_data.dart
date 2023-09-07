@@ -39,6 +39,7 @@ class StoreData {
         resp = 'Please verify your new email';
       }
       else resp = 'Successfully save profile';
+      FirebaseAuth.instance.currentUser?.reload();
 
     } catch(err){
       resp = err.toString();

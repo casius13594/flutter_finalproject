@@ -53,20 +53,17 @@ class _ProfileEditingState extends State<ProfileEditing> {
     setState(() {
       _isLoading = true; // Show loading indicator
     });
-    final firestore = FirebaseFirestore.instance;
-    DocumentReference documentReference = firestore
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.uid);
-    final DocumentSnapshot documentSnapshot = await documentReference.get();
-    final imageUrl = await documentSnapshot.get('image');
-    final email = await documentSnapshot.get('email');
-    final unint8list = await getImageUint8List(imageUrl);
-    final name = await documentSnapshot.get('name');
+
+    final imageUrl = await FirebaseAuth.instance.currentUser?.photoURL;
+    final unint8list = await getImageUint8List(imageUrl!);
+    final email = await FirebaseAuth.instance.currentUser?.email;
+
+    final name = await FirebaseAuth.instance.currentUser?.displayName;
     try {
       setState(() {
-        _controllerName.text = name;
+        _controllerName.text = name!;
         _image = unint8list;
-        _controllerEmail.text = email;
+        _controllerEmail.text = email!;
         _isLoading = false; // Hide loading indicator
       });
 
@@ -126,6 +123,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
       setState(() {
         _isLoading = false; // Show loading indicator
       });
+      setState(() {});
       Fluttertoast.showToast(msg: resp);
       if (resp == 'Please verify your new email') {
         Navigator.push(
@@ -134,6 +132,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
     } else
       Fluttertoast.showToast(msg: 'Please recheck the field(s).');
   }
+
 
   @override
   Widget build(BuildContext context) {
