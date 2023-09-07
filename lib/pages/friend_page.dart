@@ -116,12 +116,19 @@ class _FriendPageState extends State<Friendpage>{
     }
   }
 
+
   @override
   void initState() {
     super.initState();
     listfriend_state_withName = listfriend_state;
     fetchData();
+
+    _firestore.collection('friend').where('friend1', isEqualTo: email_current).snapshots().listen((event) {
+      fetchData(); // Update data when changes occur
+    });
   }
+
+
 
   void fitter(String keyValue)
   {
