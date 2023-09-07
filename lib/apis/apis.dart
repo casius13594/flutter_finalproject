@@ -95,6 +95,15 @@ class APIs {
             {'read_time': DateTime.now().millisecondsSinceEpoch.toString()});
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMess(
+      ChatUserProfile chatUserProfile) {
+    return firestore
+        .collection('chats/${getConversationID(chatUserProfile.uid)}/messages')
+        .orderBy('sent_time', descending: true)
+        .limit(1)
+        .snapshots();
+  }
+
   //image
   static Future<Uint8List?> getImage() async {
     final FirebaseStorage storage = FirebaseStorage.instance;
