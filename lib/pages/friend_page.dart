@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
 import 'package:flutter_finalproject/pages/chat_page.dart';
@@ -126,6 +128,8 @@ class _FriendPageState extends State<Friendpage>{
     _firestore.collection('friend').where('friend1', isEqualTo: email_current).snapshots().listen((event) {
       fetchData(); // Update data when changes occur
     });
+
+
   }
 
 
@@ -208,14 +212,28 @@ class _FriendPageState extends State<Friendpage>{
                           MaterialPageRoute(builder: (_) => ChatPage(user: user_chat)));
                     },
                     child: ListTile(
-                      title: Text(item['name']),
-                      leading: Icon(
-                        Icons.person,
+                      title: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(item['name']),
+                          SizedBox(width: 5),
+                          is_online(item['is_active']),
+                        ],
+                      ),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(height * .03),
+                        child: CachedNetworkImage(
+                          width: height * .055,
+                          height: height * .055,
+                          imageUrl: item['image'],
+                          errorWidget: (context, url, error) => const CircleAvatar(
+                            child: Icon(CupertinoIcons.person),
+                          ),
+                        ),
                       ),
                       trailing: (item['state']!=3)?
                           Row(mainAxisSize: MainAxisSize.min,
                             children: <Widget> [
-                              is_online(item['is_active']),
                               SizedBox(width: 5),
                               ElevatedButton(
                                   onPressed: (){
@@ -232,7 +250,6 @@ class _FriendPageState extends State<Friendpage>{
                           : Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              is_online(item['is_active']),
                               ElevatedButton(
                                 onPressed: (){
                                   deleteFriendState(email_current, item['email'], 0, index);
@@ -283,15 +300,15 @@ class _FriendPageState extends State<Friendpage>{
   {
     return (check)?
       Container(
-      width: 20.0, // Adjust the width and height as needed
-      height: 20.0,
+      width: 8.0, // Adjust the width and height as needed
+      height: 8.0,
       decoration: BoxDecoration(
         shape: BoxShape.circle, // Create a circular shape
-        color: Colors.green[900],//Theme.of(context).colorScheme.primary,   // Set the color to green
+        color: Colors.blue,//Theme.of(context).colorScheme.primary,   // Set the color to green
       ),
       ) : Container(
-      width: 20.0, // Adjust the width and height as needed
-      height: 20.0,
+      width: 8.0, // Adjust the width and height as needed
+      height: 8.0,
       decoration: BoxDecoration(
         shape: BoxShape.circle, // Create a circular shape
         color: Colors.grey[900],//Theme.of(context).colorScheme.onSecondary,   // Set the color to green
