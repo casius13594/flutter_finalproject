@@ -129,6 +129,10 @@ class _FriendPageState extends State<Friendpage>{
       fetchData(); // Update data when changes occur
     });
 
+    _firestore.collection('users').where('email', isEqualTo: email_current).snapshots().listen((event) {
+      fetchData(); // Update data when changes occur
+    });
+
 
   }
 
