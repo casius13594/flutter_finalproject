@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,8 +20,9 @@ class Homepage extends StatefulWidget{
 
 class _HomePageState extends State<Homepage>{
   late GoogleMapController mapController;
-  LocationData? _currentLocation;
+  LocationData? _currentLocation, _previousLocation;
   Set<Marker> markers = {};
+  Timer? updateTimer;
 
   Location location = new Location();
 
@@ -54,6 +56,7 @@ class _HomePageState extends State<Homepage>{
   void initState() {
     super.initState();
     _initLocation();
+    _startPeriodicUpdates();
   }
 
   @override
@@ -61,6 +64,7 @@ class _HomePageState extends State<Homepage>{
     mapController.dispose();
     locationSubscription?.cancel();
     subscription.cancel(); // Cancel the stream subscription when disposing of the widget
+    updateTimer?.cancel();
     super.dispose();
   }
 
@@ -74,15 +78,6 @@ class _HomePageState extends State<Homepage>{
         _currentLocation = location;
         _updateGeoPoint();
       });
-
-      // Listen for location changes and update Firestore geopoint
-/*      locationSubscription = locationService.onLocationChanged.listen((LocationData newLocation) async {
-        if (!mounted) return;
-
-        setState(() {
-          _currentLocation = newLocation;
-        });
-      });*/
     }
   }
 
@@ -119,6 +114,35 @@ class _HomePageState extends State<Homepage>{
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
       mapController = controller;
+    });
+  }
+
+  void _startPeriodicUpdates() {
+    updateTimer = Timer.periodic(Duration(seconds: 5), (Timer timer) async {
+      try {
+        var newLocation = await location.getLocation();
+        _updateGeoPoint();
+        if (_previousLocation != null) {
+          double distance = distanceBetween(
+            _previousLocation!.latitude!,
+            _previousLocation!.longitude!,
+            newLocation.latitude!,
+            newLocation.longitude!,
+          );
+
+        if (distance >= 0.05) {
+          // Update data and markers
+          _updateGeoPoint();
+        }
+        }
+
+        setState(() {
+          _currentLocation = newLocation;
+          _previousLocation = newLocation;
+        });
+      } catch (e) {
+        print("Error getting location: $e");
+      }
     });
   }
 
@@ -216,17 +240,21 @@ class _HomePageState extends State<Homepage>{
         final geopoint = data['position']['geopoint'] as GeoPoint?;
         final markerTitle = data['email'] as String?;
         if (geopoint != null) {
+          double distanceFriend = distanceBetween(_currentLocation!.latitude!,
+              _currentLocation!.longitude!, geopoint.latitude, geopoint.longitude);
+
           var markerIdVal = UniqueKey().toString(); // Generate a unique markerId
           var marker = Marker(
             markerId: MarkerId(markerIdVal),
             position: LatLng(geopoint.latitude, geopoint.longitude),
             icon: BitmapDescriptor.defaultMarker,
             infoWindow: InfoWindow(
-              title: markerTitle
+              title: markerTitle,
+              snippet: 'Distance: ${distanceFriend.toStringAsFixed(2)} km',
             ),
           );
 
-          // Check if the marker corresponds to the current user's email
+
           if (currentUserEmail != null && markerTitle == currentUserEmail) {
             // Customize the marker for the current user
             marker = marker.copyWith(
@@ -240,6 +268,24 @@ class _HomePageState extends State<Homepage>{
         }
       }
     });
+  }
+
+  double deg2rad(double deg) {
+    return deg * (pi / 180);
+  }
+
+  double rad2deg(double rad) {
+    return rad * (180 / pi);
+  }
+
+  double distanceBetween(double lat1, double lng1, double lat2, double lng2) {
+    double theta = lng1 - lng2;
+    double dist = sin(deg2rad(lat1)) * sin(deg2rad(lat2)) +
+        cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * cos(deg2rad(theta));
+    dist = acos(dist);
+    dist = rad2deg(dist);
+    dist = dist * 60 * 1.60934; // Distance in kilometers
+    return dist;
   }
 
 }
