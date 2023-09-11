@@ -21,12 +21,8 @@ class _ProfileEditingState extends State<ProfileEditing> {
   Uint8List? _image;
 
   final TextEditingController _controllerName = TextEditingController();
-
-  final TextEditingController _controllerEmail = TextEditingController();
   bool _nameValidate = false;
 
-  bool _emailValidate = false;
-  String _emailError = '';
 
   bool _isLoading = true;
 
@@ -61,7 +57,6 @@ class _ProfileEditingState extends State<ProfileEditing> {
     try {
       setState(() {
         _controllerName.text = name!;
-        _controllerEmail.text = email!;
       });
       final unint8list = await getImageUint8List(imageUrl!);
       setState(() {
@@ -88,49 +83,25 @@ class _ProfileEditingState extends State<ProfileEditing> {
   }
 
   void saveProfile() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: _controllerEmail.text)
-        .get();
-    if (!querySnapshot.docs.isEmpty &&
-        _controllerEmail.text != FirebaseAuth.instance.currentUser?.email) {
-      _emailValidate = true;
-      _emailError = "This email is already used for another account";
-    } else {
-      _emailValidate = false;
-    }
 
     setState(() {
       _controllerName.text.isEmpty
           ? _nameValidate = true
           : _nameValidate = false;
-      if (_controllerEmail.text.isEmpty) {
-        _emailValidate = true;
-        _emailError = 'This field cannot be empty';
-      }
-      if (!EmailValidator.validate(_controllerEmail.text)) {
-        _emailValidate = true;
-        _emailError = 'Please enter a valid email';
-      }
     });
 
-    if (!_nameValidate && !_emailValidate) {
+    if (!_nameValidate) {
       setState(() {
         _isLoading = true; // Show loading indicator
       });
       String resp = await StoreData().saveData(
           name: _controllerName.text,
-          file: _image!,
-          email: _controllerEmail.text);
+          file: _image!,);
       setState(() {
         _isLoading = false; // Show loading indicator
       });
       setState(() {});
       Fluttertoast.showToast(msg: resp);
-      if (resp == 'Please verify your new email') {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PhoneVerify()));
-      }
     } else
       Fluttertoast.showToast(msg: 'Please recheck the field(s).');
   }
@@ -273,57 +244,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
                             borderRadius: BorderRadius.circular(20),
                           )),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'Email',
-                        style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onTertiaryContainer,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: _controllerEmail,
-                      style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onTertiaryContainer),
-                      decoration: InputDecoration(
-                          errorText: _emailValidate ? _emailError : null,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                                width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                width: 2),
-                          ),
-                          fillColor:
-                              Theme.of(context).colorScheme.tertiaryContainer,
-                          hintText: 'Email',
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onTertiaryContainer),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          )),
-                    ),
+
                     SizedBox(
                       height: 20,
                     ),

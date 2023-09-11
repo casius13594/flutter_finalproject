@@ -21,8 +21,7 @@ class StoreData {
   Future<String> saveData(
       {required String name,
 
-      required Uint8List file,
-      required String email}) async {
+      required Uint8List file}) async {
     String resp = "Some Error Occurred";
     try{
       String imageUrl = await uploadImagetoStorage(FirebaseAuth.instance.currentUser!.uid.toString(), file);
@@ -30,15 +29,11 @@ class StoreData {
       await documentReference.update({
         'name' : name,
         'image': imageUrl,
-        'email' : email,
       });
       FirebaseAuth.instance.currentUser?.updateDisplayName(name);
       FirebaseAuth.instance.currentUser?.updatePhotoURL(imageUrl);
-      if(FirebaseAuth.instance.currentUser?.email != email){
-        FirebaseAuth.instance.currentUser?.updateEmail(email);
-        resp = 'Please verify your new email';
-      }
-      else resp = 'Successfully save profile';
+
+      resp = 'Successfully save profile';
       FirebaseAuth.instance.currentUser?.reload();
 
     } catch(err){
