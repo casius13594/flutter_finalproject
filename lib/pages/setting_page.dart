@@ -56,8 +56,11 @@ class _SettingPageState extends State<Settingpage> {
     });
 
     try {
-      _controllerName.text =
-          (await FirebaseAuth.instance.currentUser?.displayName)!;
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get();
+      _controllerName.text = userSnapshot.get('name');
 
       setState(() {
         _isLoading = false; // Hide loading indicator
@@ -133,7 +136,7 @@ class _SettingPageState extends State<Settingpage> {
                             return CircularProgressIndicator(); // Display a loading indicator
                           }
                           if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
+                            return Text('Error snapshot: ${snapshot.error}');
                           }
 
                           return Column(
@@ -144,10 +147,14 @@ class _SettingPageState extends State<Settingpage> {
                                 // image of profile
                                 child: CircleAvatar(
                                         radius: 64,
-                                        backgroundImage: NetworkImage((
-                                            snapshot.data!.data() as Map<String, dynamic>?)?['image'] ??
-                                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+                                        backgroundImage: NetworkImage(
+                                          (snapshot.data!.data() as Map<String, dynamic>?)?['image'] == null ||
+                                            (snapshot.data!.data() as Map<String, dynamic>?)?['image'] == 'null'
+                                                 ?
+                                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                                                : (snapshot.data!.data() as Map<String, dynamic>?)?['image'],
                                       ),
+                                ),
                               ),
                               SizedBox(width: 30),
 
@@ -304,7 +311,8 @@ class _SettingPageState extends State<Settingpage> {
                                 ),
                                 onPressed: () async {
                                   GoogleSignIn _googleSignIn = GoogleSignIn();
-                                  await _googleSignIn.disconnect();
+                                  if(_googleSignIn.currentUser != null)
+                                    await _googleSignIn.disconnect();
                                   await FirebaseAuth.instance.signOut();
                                   Navigator.push(
                                       context,

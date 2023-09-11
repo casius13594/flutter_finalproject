@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -22,7 +20,6 @@ class _ProfileEditingState extends State<ProfileEditing> {
 
   final TextEditingController _controllerName = TextEditingController();
   bool _nameValidate = false;
-
 
   bool _isLoading = true;
 
@@ -50,22 +47,33 @@ class _ProfileEditingState extends State<ProfileEditing> {
       _isLoading = true; // Show loading indicator
     });
 
-    final imageUrl = await FirebaseAuth.instance.currentUser?.photoURL;
-    final email = await FirebaseAuth.instance.currentUser?.email;
-    final name = await FirebaseAuth.instance.currentUser?.displayName;
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    final imageUrl = await userSnapshot.get('image');
+    final name = await userSnapshot.get('name');
 
     try {
       setState(() {
         _controllerName.text = name!;
       });
-      final unint8list = await getImageUint8List(imageUrl!);
-      setState(() {
-        _image = unint8list;
-        _isLoading = false; // Hide loading indicator
-      });
-
-      print('Email: $email');
+      if (imageUrl == null || imageUrl == 'null') {
+        final unint8list = await getImageUint8List(
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png');
+        setState(() {
+          _image = unint8list;
+          _isLoading = false; // Hide loading indicator
+        });
+      } else {
+        final unint8list = await getImageUint8List(imageUrl);
+        setState(() {
+          _image = unint8list;
+          _isLoading = false; // Hide loading indicator
+        });
+      }
       print('Name: $name');
+
       // Now you have the image data as Uint8List, you can use it as needed.
     } catch (e) {
       print('Error: $e');
@@ -78,12 +86,11 @@ class _ProfileEditingState extends State<ProfileEditing> {
 
   @override
   void initState() {
-    _initializeData();
     super.initState();
+    _initializeData();
   }
 
   void saveProfile() async {
-
     setState(() {
       _controllerName.text.isEmpty
           ? _nameValidate = true
@@ -95,8 +102,9 @@ class _ProfileEditingState extends State<ProfileEditing> {
         _isLoading = true; // Show loading indicator
       });
       String resp = await StoreData().saveData(
-          name: _controllerName.text,
-          file: _image!,);
+        name: _controllerName.text,
+        file: _image!,
+      );
       setState(() {
         _isLoading = false; // Show loading indicator
       });
@@ -105,7 +113,6 @@ class _ProfileEditingState extends State<ProfileEditing> {
     } else
       Fluttertoast.showToast(msg: 'Please recheck the field(s).');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -179,11 +186,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
                           ? CircleAvatar(
                               radius: 105,
                               backgroundImage: MemoryImage(_image!))
-                          : CircleAvatar(
-                              radius: 105,
-                              backgroundImage: NetworkImage(
-                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
-                            ),
+                          : CircularProgressIndicator(),
                       Positioned(
                         child: IconButton(
                           onPressed: selectImage,
@@ -244,7 +247,6 @@ class _ProfileEditingState extends State<ProfileEditing> {
                             borderRadius: BorderRadius.circular(20),
                           )),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
