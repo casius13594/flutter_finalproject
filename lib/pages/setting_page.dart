@@ -35,20 +35,19 @@ class _SettingPageState extends State<Settingpage> {
   bool _isLoading = true;
 
   //changetheme _switch = changetheme(false);
-  Uint8List? _image;
   final _controllerName = TextEditingController();
 
-  Future<Uint8List> getImageUint8List(String imageUrl) async {
-    final response = await http.get(Uri.parse(imageUrl));
-
-    if (response.statusCode == 200) {
-      // If the request to the URL is successful, convert the response body (byte data) to Uint8List
-      return Uint8List.fromList(response.bodyBytes);
-    } else {
-      // Handle error cases here, such as a 404 Not Found error
-      throw Exception('Failed to load image');
-    }
-  }
+  // Future<Uint8List> getImageUint8List(String imageUrl) async {
+  //   final response = await http.get(Uri.parse(imageUrl));
+  //
+  //   if (response.statusCode == 200) {
+  //     // If the request to the URL is successful, convert the response body (byte data) to Uint8List
+  //     return Uint8List.fromList(response.bodyBytes);
+  //   } else {
+  //     // Handle error cases here, such as a 404 Not Found error
+  //     throw Exception('Failed to load image');
+  //   }
+  // }
 
   Future<void> _initializeSettingData() async {
     setState(() {
@@ -56,15 +55,9 @@ class _SettingPageState extends State<Settingpage> {
     });
 
     try {
-      final imageUrl = await FirebaseAuth.instance.currentUser?.photoURL;
       _controllerName.text =
           (await FirebaseAuth.instance.currentUser?.displayName)!;
-      if (imageUrl != null) {
-        final unint8list = await getImageUint8List(imageUrl);
-        setState(() {
-          _image = unint8list;
-        });
-      }
+
       setState(() {
         _isLoading = false; // Hide loading indicator
       });
@@ -141,19 +134,17 @@ class _SettingPageState extends State<Settingpage> {
                           if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           }
+
                           return Column(
                             children: [
                               // Show profile in settings
                               Padding(
                                 padding: EdgeInsets.only(left: 0, top: 0),
                                 // image of profile
-                                child: _image != null
-                                    ? CircleAvatar(
+                                child: CircleAvatar(
                                         radius: 64,
-                                        backgroundImage: MemoryImage(_image!))
-                                    : CircleAvatar(
-                                        radius: 64,
-                                        backgroundImage: NetworkImage(
+                                        backgroundImage: NetworkImage((
+                                            snapshot.data!.data() as Map<String, dynamic>?)?['image'] ??
                                             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                                       ),
                               ),

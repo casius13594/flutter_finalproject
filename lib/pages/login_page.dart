@@ -289,11 +289,10 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(width: 5),
                         TextButton(
                           onPressed: () async {
+                            if (GoogleSignIn().currentUser != null)
+                              await GoogleSignIn().disconnect();
                             if (FirebaseAuth.instance.currentUser != null) {
                               await FirebaseAuth.instance.signOut();
-                            }
-                            if (GoogleSignIn().currentUser != null) {
-                              await GoogleSignIn().disconnect();
                             }
                             _handleGoogleLogin();
                           },

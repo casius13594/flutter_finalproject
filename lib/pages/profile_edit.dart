@@ -55,15 +55,17 @@ class _ProfileEditingState extends State<ProfileEditing> {
     });
 
     final imageUrl = await FirebaseAuth.instance.currentUser?.photoURL;
-    final unint8list = await getImageUint8List(imageUrl!);
     final email = await FirebaseAuth.instance.currentUser?.email;
-
     final name = await FirebaseAuth.instance.currentUser?.displayName;
+
     try {
       setState(() {
         _controllerName.text = name!;
-        _image = unint8list;
         _controllerEmail.text = email!;
+      });
+      final unint8list = await getImageUint8List(imageUrl!);
+      setState(() {
+        _image = unint8list;
         _isLoading = false; // Hide loading indicator
       });
 
