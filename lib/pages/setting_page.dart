@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/apis/add_data.dart';
+import 'package:flutter_finalproject/pages/change_password.dart';
 import 'package:flutter_finalproject/pages/login_page.dart';
 import 'package:flutter_finalproject/pages/profile_edit.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
@@ -242,7 +243,40 @@ class _SettingPageState extends State<Settingpage> {
                                       })
                                 ],
                               ),
-                              SizedBox(height: 20),
+                              SizedBox(height: 15),
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                  Theme.of(context).colorScheme.onTertiary,
+                                  minimumSize: Size.fromHeight(50),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Adjust the radius as needed
+                                  ),
+                                ),
+                                icon: Icon(
+                                  Icons.password,
+                                  size: 32,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
+                                label: Text(
+                                  'Change Password',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChangePasswordPage()));
+                                },
+                              ),
+                              SizedBox(height: 15,),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
