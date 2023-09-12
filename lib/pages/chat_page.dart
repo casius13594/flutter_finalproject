@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,54 +25,110 @@ class _ChatPageState extends State<ChatPage> {
   List<Message> _list = [];
   bool isTextFieldExpanded = false;
   final _textController = TextEditingController();
+  bool _EmojiMenu = false;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: _appBar(),
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-        ),
-        body: Column(children: [
-          Expanded(
-            child: StreamBuilder(
-              stream: APIs.getAllMess(widget.user),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  //check data loading
-                  case ConnectionState.waiting:
-                  case ConnectionState.none:
-                    // return const SizedBox();
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    final data = snapshot.data?.docs;
-                    _list =
-                        data?.map((e) => Message.fromJson(e.data())).toList() ??
-                            [];
-                    if (_list.isNotEmpty) {
-                      return ListView.builder(
-                          itemCount: _list.length,
-                          padding: EdgeInsets.only(top: ms.height * 0.02),
-                          itemBuilder: (context, index) {
-                            return CardMessage(message: _list[index]);
-                          },
-                        addAutomaticKeepAlives: true,
-                          );
-                    } else {
-                      return const Center(
-                        child: Text('Welcome', style: TextStyle(fontSize: 20)),
-                      );
-                    }
-                }
-              },
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SafeArea(
+        child: WillPopScope(
+          onWillPop: () {
+            if (_EmojiMenu) {
+              setState(() => _EmojiMenu = !_EmojiMenu);
+              return Future.value(false);
+            } else {
+              return Future.value(true);
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              flexibleSpace: _appBar(),
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
             ),
+            body: Column(children: [
+              Expanded(
+                child: StreamBuilder(
+                  stream: APIs.getAllMess(widget.user),
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      //check data loading
+                      case ConnectionState.waiting:
+                      case ConnectionState.none:
+                      // return const SizedBox();
+                      case ConnectionState.active:
+                      case ConnectionState.done:
+                        final data = snapshot.data?.docs;
+                        _list = data
+                                ?.map((e) => Message.fromJson(e.data()))
+                                .toList() ??
+                            [];
+                        if (_list.isNotEmpty) {
+                          return ListView.builder(
+                            itemCount: _list.length,
+                            padding: EdgeInsets.only(top: ms.height * 0.02),
+                            itemBuilder: (context, index) {
+                              return CardMessage(message: _list[index]);
+                            },
+                            addAutomaticKeepAlives: true,
+                          );
+                        } else {
+                          return const Center(
+                            child:
+                                Text('Welcome', style: TextStyle(fontSize: 20)),
+                          );
+                        }
+                    }
+                  },
+                ),
+              ),
+              Form(
+                key: _formKey,
+                child: _chatInput(),
+              ),
+              if (_EmojiMenu)
+                SizedBox(
+                  height: ms.height * .35,
+                  child: EmojiPicker(
+                    textEditingController:
+                        _textController, // pass here the same [TextEditingController] that is connected to your input field, usually a [TextFormField]
+                    config: Config(
+                      columns: 7,
+                      emojiSizeMax: 32 *
+                          (foundation.defaultTargetPlatform ==
+                                  TargetPlatform.iOS
+                              ? 1.30
+                              : 1.0), // Issue: https://github.com/flutter/flutter/issues/28894
+                      verticalSpacing: 0,
+                      horizontalSpacing: 0,
+                      gridPadding: EdgeInsets.zero,
+                      initCategory: Category.RECENT,
+                      bgColor: Color(0xFFF2F2F2),
+                      indicatorColor: Colors.blue,
+                      iconColor: Colors.grey,
+                      iconColorSelected: Colors.blue,
+                      backspaceColor: Colors.blue,
+                      skinToneDialogBgColor: Colors.white,
+                      skinToneIndicatorColor: Colors.grey,
+                      enableSkinTones: true,
+                      recentTabBehavior: RecentTabBehavior.RECENT,
+                      recentsLimit: 28,
+                      noRecents: const Text(
+                        'No Recents',
+                        style: TextStyle(fontSize: 20, color: Colors.black26),
+                        textAlign: TextAlign.center,
+                      ), // Needs to be const Widget
+                      loadingIndicator:
+                          const SizedBox.shrink(), // Needs to be const Widget
+                      tabIndicatorAnimDuration: kTabScrollDuration,
+                      categoryIcons: const CategoryIcons(),
+                      buttonMode: ButtonMode.MATERIAL,
+                    ),
+                  ),
+                )
+            ]),
           ),
-          Form(
-            key: _formKey,
-            child: _chatInput(),
-          )
-        ]),
+        ),
       ),
     );
   }
@@ -140,7 +197,9 @@ class _ChatPageState extends State<ChatPage> {
     return Row(
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            setState(() => _EmojiMenu = !_EmojiMenu);
+          },
           icon: const Icon(Icons.emoji_emotions, color: Colors.blueAccent),
         ),
         Expanded(
@@ -158,6 +217,9 @@ class _ChatPageState extends State<ChatPage> {
                       onChanged: (text) {
                         setState(() {
                           isTextFieldExpanded = text.isNotEmpty;
+                          if (_EmojiMenu) {
+                            setState(() => _EmojiMenu = !_EmojiMenu);
+                          }
                         });
                       },
                       controller: _textController,

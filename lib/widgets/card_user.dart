@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/apis/apis.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
 import 'package:flutter_finalproject/pages/chat_page.dart';
+import 'package:flutter_finalproject/utilities/dateutil.dart';
 import '../pages/message_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/message.dart';
@@ -55,14 +56,21 @@ class _ChatUserState extends State<ChatUser> {
                 ),
                 trailing: _message == null
                     ? null
-                    : Container(
-                        width: 15,
-                        height: 15,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent.shade400,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                    : _message!.readTime.isEmpty &&
+                            _message!.SenderId != APIs.user.uid
+                        ? Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent.shade400,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          )
+                        : Text(
+                            MyDateUtil.getLastMessageTime(
+                                context: context, time: _message!.sentTime),
+                            style: const TextStyle(color: Colors.black54),
+                          ),
               );
             }),
       ),
