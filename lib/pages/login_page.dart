@@ -74,255 +74,258 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(left: 25,right: 25,top: 30, bottom: 5),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 25, right: 25, top: 30, bottom: 5),
                   child: SvgPicture.asset(
                     'lib/images/logo_login.svg',
                     width: 250,
                     height: 250,
+                  ),
+                ),
 
-                  ),),
+                Text(
+                  "Welcome back",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer),
+                ),
+                //email text field
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 25, right: 25, top: 50, bottom: 5),
+                  child: TextField(
+                    controller: _controllerEmail,
+                    enableSuggestions: true,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        fillColor: Theme.of(context).colorScheme.secondary,
+                        filled: true,
+                        border: InputBorder.none,
+                        hintText: 'Email',
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.mail,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        )),
+                  ),
+                ),
 
-                  Text(
-                    "Welcome back",
+                // password
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 25, right: 25, top: 5, bottom: 5),
+                  child: TextField(
+                    controller: _controllerPassword,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color:
-                            Theme.of(context).colorScheme.onPrimaryContainer),
-                  ),
-                  //email text field
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25,right: 25,top: 50, bottom: 5),
-                    child: TextField(
-                      controller: _controllerEmail,
-                      enableSuggestions: true,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onSecondary,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          fillColor: Theme.of(context).colorScheme.secondary,
-                          filled: true,
-                          border: InputBorder.none,
-                          hintText: 'Email',
-                          hintStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                          prefixIcon: Icon(
-                            Icons.mail,
-                            color: Theme.of(context).colorScheme.onBackground,
-                          )),
+                      color: Theme.of(context).colorScheme.background,
                     ),
-                  ),
-
-                  // password
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25,right: 25,top: 5, bottom: 5),
-                    child: TextField(
-                      controller: _controllerPassword,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.background,
-                      ),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onSecondary,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onSecondary,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          fillColor: Theme.of(context).colorScheme.secondary,
-                          filled: true,
-                          border: InputBorder.none,
-                          hintText: 'Password',
-                          hintStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                          prefixIcon: Icon(Icons.lock,
-                              color:
-                                  Theme.of(context).colorScheme.onBackground)),
-                    ),
-                  ),
-                  //Forgot Password
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30,top: 5, bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ResetPassword()));
-                          },
-                          child: Text(
-                            'Forgot password?',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                          ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ],
-                    ),
-                  ),
-
-                  // sign in button
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25,right: 25,top: 5, bottom: 10),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: TextButton(
-                        onPressed: () {
-                          FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: _controllerEmail.text,
-                                  password: _controllerPassword.text)
-                              .then((value) {
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(FirebaseAuth.instance.currentUser?.uid.toString())
-                                .update({
-                              'is_active': true,
-                              'last_seen': DateTime.now().microsecondsSinceEpoch.toString()
-                            });
-                            Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (context) => shiftscreen.withData(_controllerEmail.text)));
-                          }).onError((error, stackTrace) {
-                            print("Error ${error.toString()} ");
-                          });
-                        },
-                        style: TextButton.styleFrom(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .onTertiaryContainer,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        child: Center(
-                          child: Text(
-                            'Sign In',
-                            style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .tertiaryContainer,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onBackground,
                           ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                    ),
+                        fillColor: Theme.of(context).colorScheme.secondary,
+                        filled: true,
+                        border: InputBorder.none,
+                        hintText: 'Password',
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                        prefixIcon: Icon(Icons.lock,
+                            color: Theme.of(context).colorScheme.onBackground)),
                   ),
-
-                  Row(
+                ),
+                //Forgot Password
+                Padding(
+                  padding: const EdgeInsets.only(right: 30, top: 5, bottom: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(left: 25,right: 20),
-                            child: Divider(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                              height: 36,
-                            ),
-                          )),
-                      Text(
-                        'Or',
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimaryContainer,
-                          fontSize: 20
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ResetPassword()));
+                        },
+                        child: Text(
+                          'Forgot password?',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ),
-                      Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(left: 20,right: 25),
-                            child: Divider(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                              height: 36,
-                            ),
-                          )),
                     ],
                   ),
+                ),
 
-                  IconButton(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    onPressed: () async {
+                // sign in button
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 25, right: 25, top: 5, bottom: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: TextButton(
+                      onPressed: () {
+                        FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                                email: _controllerEmail.text,
+                                password: _controllerPassword.text)
+                            .then((value) {
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(FirebaseAuth.instance.currentUser?.uid
+                                  .toString())
+                              .update({
+                            'is_active': true,
+                            'last_seen':
+                                DateTime.now().microsecondsSinceEpoch.toString()
+                          });
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => shiftscreen
+                                      .withData(_controllerEmail.text)));
+                        }).onError((error, stackTrace) {
+                          print("Error ${error.toString()} ");
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.onTertiaryContainer,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      child: Center(
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.tertiaryContainer,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Row(
+                  children: [
+                    Expanded(
+                        child: Container(
+                      margin: EdgeInsets.only(left: 25, right: 20),
+                      child: Divider(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        height: 36,
+                      ),
+                    )),
+                    Text(
+                      'Or',
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontSize: 20),
+                    ),
+                    Expanded(
+                        child: Container(
+                      margin: EdgeInsets.only(left: 20, right: 25),
+                      child: Divider(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        height: 36,
+                      ),
+                    )),
+                  ],
+                ),
+
+                GestureDetector(
+                    onTap: () async {
                       if (GoogleSignIn().currentUser != null)
                         await GoogleSignIn().disconnect();
                       if (FirebaseAuth.instance.currentUser != null) {
                         await FirebaseAuth.instance.signOut();
                       }
                       _handleGoogleLogin();
-                      },
-                    icon: SvgPicture.asset(
-                      'lib/images/google_login.svg',
-                      fit: BoxFit.fill,
-                    ),),
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: SvgPicture.asset(
+                          'lib/images/google_login.svg',
+                          width: 40,
+                          height: 40,
+                        ))),
 
-                  // Not a member? Register
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Not a member?',
+                // Not a member? Register
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Not a member?',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterPage()));
+                        },
+                        child: Text(
+                          'Register',
                           style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
+                            color: Theme.of(context).colorScheme.error,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
                         ),
-                        SizedBox(width: 5),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegisterPage()));
-                          },
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
+        ),
+      ),
     );
   }
 }
