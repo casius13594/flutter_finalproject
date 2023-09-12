@@ -74,29 +74,17 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
               child: Column(
-                children: [
-                  Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SvgPicture.asset(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(left: 25,right: 25,top: 30, bottom: 5),
+                  child: SvgPicture.asset(
                     'lib/images/logo_login.svg',
-                    width: 300,
-                    height: 300,
-                    alignment: Alignment.topCenter,
-                  ),
+                    width: 250,
+                    height: 250,
 
-                  SizedBox(height: 10),
+                  ),),
 
                   Text(
                     "Welcome back",
@@ -106,11 +94,9 @@ class _LoginPageState extends State<LoginPage> {
                         color:
                             Theme.of(context).colorScheme.onPrimaryContainer),
                   ),
-                  SizedBox(height: 20),
-
                   //email text field
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.only(left: 25,right: 25,top: 50, bottom: 5),
                     child: TextField(
                       controller: _controllerEmail,
                       enableSuggestions: true,
@@ -141,10 +127,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  SizedBox(height: 10),
                   // password
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.only(left: 25,right: 25,top: 5, bottom: 5),
                     child: TextField(
                       controller: _controllerPassword,
                       style: TextStyle(
@@ -176,12 +161,9 @@ class _LoginPageState extends State<LoginPage> {
                                   Theme.of(context).colorScheme.onBackground)),
                     ),
                   ),
-
-                  SizedBox(height: 20),
-
                   //Forgot Password
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.only(right: 30,top: 5, bottom: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -203,11 +185,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  SizedBox(height: 20),
-
                   // sign in button
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.only(left: 25,right: 25,top: 5, bottom: 10),
                     child: SizedBox(
                       width: double.infinity,
                       height: 56,
@@ -253,7 +233,57 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30),
+
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 25,right: 20),
+                            child: Divider(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                              height: 36,
+                            ),
+                          )),
+                      Text(
+                        'Or',
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimaryContainer,
+                          fontSize: 20
+                        ),
+                      ),
+                      Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20,right: 25),
+                            child: Divider(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                              height: 36,
+                            ),
+                          )),
+                    ],
+                  ),
+
+                  IconButton(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    onPressed: () async {
+                      if (GoogleSignIn().currentUser != null)
+                        await GoogleSignIn().disconnect();
+                      if (FirebaseAuth.instance.currentUser != null) {
+                        await FirebaseAuth.instance.signOut();
+                      }
+                      _handleGoogleLogin();
+                      },
+                    icon: SvgPicture.asset(
+                      'lib/images/google_login.svg',
+                      fit: BoxFit.fill,
+                    ),),
 
                   // Not a member? Register
                   Padding(
@@ -286,25 +316,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 5),
-                        TextButton(
-                          onPressed: () async {
-                            if (GoogleSignIn().currentUser != null)
-                              await GoogleSignIn().disconnect();
-                            if (FirebaseAuth.instance.currentUser != null) {
-                              await FirebaseAuth.instance.signOut();
-                            }
-                            _handleGoogleLogin();
-                          },
-                          child: Text(
-                            'Google',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -312,8 +323,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 }
