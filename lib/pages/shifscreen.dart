@@ -7,21 +7,14 @@ import 'package:flutter_finalproject/pages/setting_page.dart';
 
 
 class shiftscreen extends StatefulWidget {
-  String current_email ='';
   shiftscreen();
-  shiftscreen.withData(this.current_email);
   @override
-  State<shiftscreen> createState() => _shiftPageState(this.current_email);
+  State<shiftscreen> createState() => _shiftPageState();
 }
 
 
 class _shiftPageState extends State<shiftscreen>{
   int _selectedPageIndex = 0;
-  late String current_email1='';
-  _shiftPageState(String email)
-  {
-    this.current_email1 = email;
-  }
   Widget getpage(int index) {
     switch (index){
       case 0:
@@ -31,7 +24,7 @@ class _shiftPageState extends State<shiftscreen>{
         return MessagePage();
         break;
       case 2:
-        return Friendpage(current_email_pg: this.current_email1);
+        return Friendpage();
         break;
       case 3:
         return Settingpage();

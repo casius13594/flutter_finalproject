@@ -213,8 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => shiftscreen
-                                      .withData(_controllerEmail.text)));
+                                  builder: (context) => shiftscreen()));
                         }).onError((error, stackTrace) {
                           print("Error ${error.toString()} ");
                         });
@@ -279,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Container(
                       padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
+                          border: Border.all(color: Theme.of(context).colorScheme.onPrimaryContainer),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: SvgPicture.asset(

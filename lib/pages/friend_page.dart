@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
@@ -7,112 +8,110 @@ import 'package:flutter_finalproject/pages/chat_page.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 
 class Friendpage extends StatefulWidget{
-  final String current_email_pg;
-  const Friendpage({super.key,required this.current_email_pg});
+  const Friendpage({super.key});
 
   @override
-  State<StatefulWidget> createState()  => _FriendPageState(this.current_email_pg);
+  State<StatefulWidget> createState()  => _FriendPageState();
 
 }
 
 class _FriendPageState extends State<Friendpage>{
   late double height, width;
   String name ='';
-  String email_current='';
+  String? email_current;
 
-  _FriendPageState(String email)
-  {
-    this.email_current=email;
-  }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  User? user = FirebaseAuth.instance.currentUser;
   List<Map<String, dynamic>> listfriend_state =[];
   List<Map<String, dynamic>> listfriend_state_withName =[];
 
   Future<void> fetchData() async {
     try {
-      QuerySnapshot<Map<String, dynamic>> userExcept =
-      await _firestore.collection('users').where('email', isNotEqualTo: email_current).get();
+      if (user != null) {
+        email_current = user!.email;
+        QuerySnapshot<Map<String, dynamic>> userExcept =
+        await _firestore.collection('users').where('email', isNotEqualTo: email_current).get();
 
-      QuerySnapshot<Map<String, dynamic>> friend =
-      await _firestore.collection('friend').where('friend1', isEqualTo: email_current).get();
+        QuerySnapshot<Map<String, dynamic>> friend =
+        await _firestore.collection('friend').where('friend1', isEqualTo: email_current).get();
 
-      QuerySnapshot<Map<String, dynamic>> friendState1 = await _firestore
-          .collection('friend')
-          .where('friend1', isEqualTo: email_current)
-          .where('state', isEqualTo: 1)
-          .get();
+        QuerySnapshot<Map<String, dynamic>> friendState1 = await _firestore
+            .collection('friend')
+            .where('friend1', isEqualTo: email_current)
+            .where('state', isEqualTo: 1)
+            .get();
 
-      QuerySnapshot<Map<String, dynamic>> friendState2 = await _firestore
-          .collection('friend')
-          .where('friend1', isEqualTo: email_current)
-          .where('state', isEqualTo: 2)
-          .get();
+        QuerySnapshot<Map<String, dynamic>> friendState2 = await _firestore
+            .collection('friend')
+            .where('friend1', isEqualTo: email_current)
+            .where('state', isEqualTo: 2)
+            .get();
 
-      QuerySnapshot<Map<String, dynamic>> friendState3 = await _firestore
-          .collection('friend')
-          .where('friend1', isEqualTo: email_current)
-          .where('state', isEqualTo: 3)
-          .get();
+        QuerySnapshot<Map<String, dynamic>> friendState3 = await _firestore
+            .collection('friend')
+            .where('friend1', isEqualTo: email_current)
+            .where('state', isEqualTo: 3)
+            .get();
 
-      List<Map<String, dynamic>> emailUsers =
-      userExcept.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        List<Map<String, dynamic>> emailUsers =
+        userExcept.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 
-      List<Map<String, dynamic>> emailUsersState1 =
-      List<Map<String, dynamic>>.from(emailUsers);
-      List<Map<String, dynamic>> emailUsersState2 =
-      List<Map<String, dynamic>>.from(emailUsers);
-      List<Map<String, dynamic>> emailUsersState3 =
-      List<Map<String, dynamic>>.from(emailUsers);
+        List<Map<String, dynamic>> emailUsersState1 =
+        List<Map<String, dynamic>>.from(emailUsers);
+        List<Map<String, dynamic>> emailUsersState2 =
+        List<Map<String, dynamic>>.from(emailUsers);
+        List<Map<String, dynamic>> emailUsersState3 =
+        List<Map<String, dynamic>>.from(emailUsers);
 
-      List<Map<String, dynamic>> emailFriend =
-      friend.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      List<Map<String, dynamic>> friendsState1 =
-      friendState1.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      List<Map<String, dynamic>> friendsState2 =
-      friendState2.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-      List<Map<String, dynamic>> friendsState3 =
-      friendState3.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        List<Map<String, dynamic>> emailFriend =
+        friend.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        List<Map<String, dynamic>> friendsState1 =
+        friendState1.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        List<Map<String, dynamic>> friendsState2 =
+        friendState2.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        List<Map<String, dynamic>> friendsState3 =
+        friendState3.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 
-      emailUsers.removeWhere((user_item) =>
-          emailFriend.any((friend_item) => friend_item['friend2'] == user_item['email']));
+        emailUsers.removeWhere((user_item) =>
+            emailFriend.any((friend_item) => friend_item['friend2'] == user_item['email']));
 
-      emailUsersState1.removeWhere((user_item) =>
-      !friendsState1.any((friend_item) => friend_item['friend2'] == user_item['email']));
+        emailUsersState1.removeWhere((user_item) =>
+        !friendsState1.any((friend_item) => friend_item['friend2'] == user_item['email']));
 
-      emailUsersState2.removeWhere((user_item) =>
-      !friendsState2.any((friend_item) => friend_item['friend2'] == user_item['email']));
+        emailUsersState2.removeWhere((user_item) =>
+        !friendsState2.any((friend_item) => friend_item['friend2'] == user_item['email']));
 
-      emailUsersState3.removeWhere((user_item) =>
-      !friendsState3.any((friend_item) => friend_item['friend2'] == user_item['email']));
+        emailUsersState3.removeWhere((user_item) =>
+        !friendsState3.any((friend_item) => friend_item['friend2'] == user_item['email']));
 
-      for (var item in emailUsers) {
-        item['state'] = 0;
-      }
+        for (var item in emailUsers) {
+          item['state'] = 0;
+        }
 
-      for (var item in emailUsersState1) {
-        item['state'] = 1;
-      }
+        for (var item in emailUsersState1) {
+          item['state'] = 1;
+        }
 
-      for (var item in emailUsersState2) {
-        item['state'] = 2;
-      }
+        for (var item in emailUsersState2) {
+          item['state'] = 2;
+        }
 
-      for (var item in emailUsersState3) {
-        item['state'] = 3;
-      }
+        for (var item in emailUsersState3) {
+          item['state'] = 3;
+        }
 
-      setState(() {
-        print('Set state');
-        listfriend_state.clear();
-        listfriend_state_withName.clear();
-        listfriend_state.addAll(emailUsersState3);
-        listfriend_state.addAll(emailUsersState1);
-        listfriend_state.addAll(emailUsersState2);
-        listfriend_state.addAll(emailUsers);
-        print('load okki');
-      });
+        setState(() {
+          print('Set state');
+          listfriend_state.clear();
+          listfriend_state_withName.clear();
+          listfriend_state.addAll(emailUsersState3);
+          listfriend_state.addAll(emailUsersState1);
+          listfriend_state.addAll(emailUsersState2);
+          listfriend_state.addAll(emailUsers);
+          print('load okki');
+        });
+    }
     } catch (e) {
       print('Error fetching data: $e');
     }
@@ -129,7 +128,7 @@ class _FriendPageState extends State<Friendpage>{
       fetchData(); // Update data when changes occur
     });
 
-    _firestore.collection('users').where('email', isEqualTo: email_current).snapshots().listen((event) {
+    _firestore.collection('users').snapshots().listen((event) {
       fetchData(); // Update data when changes occur
     });
 
@@ -243,8 +242,8 @@ class _FriendPageState extends State<Friendpage>{
                                   onPressed: (){
                                     if(item['state'] == 0)
                                     {
-                                      addFriendState(email_current, item['email'], 1, index);
-                                      addFriendState(item['email'], email_current, 3, -1);
+                                      addFriendState(email_current!, item['email'], 1, index);
+                                      addFriendState(item['email'], email_current!, 3, -1);
                                     }
                                   },
                                   child: liststate(item['state']),
@@ -256,15 +255,15 @@ class _FriendPageState extends State<Friendpage>{
                             children: <Widget>[
                               ElevatedButton(
                                 onPressed: (){
-                                  deleteFriendState(email_current, item['email'], 0, index);
-                                  deleteFriendState(item['email'], email_current, 0, -1);
+                                  deleteFriendState(email_current!, item['email'], 0, index);
+                                  deleteFriendState(item['email'], email_current!, 0, -1);
                                 },
                                 child: Text('Reject',),
                               ),
                               ElevatedButton(
                                 onPressed: (){
-                                  updateFriendState(email_current, item['email'], 2, index);
-                                  updateFriendState(item['email'], email_current, 2, -1);
+                                  updateFriendState(email_current!, item['email'], 2, index);
+                                  updateFriendState(item['email'], email_current!, 2, -1);
                                 },
                                 child: Text('Accept'),
                               ),
