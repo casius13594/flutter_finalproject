@@ -18,9 +18,12 @@ class CardMessage extends StatefulWidget {
 class _CardMessageState extends State<CardMessage> {
   @override
   Widget build(BuildContext context) {
-    return widget.message.SenderId == APIs.user.uid
-        ? _blueMessage()
-        : _blackMessage();
+    bool isMe = APIs.user.uid == widget.message.SenderId;
+    return InkWell(
+        onLongPress: () {
+          _showBottomSheet();
+        },
+        child: isMe ? _blueMessage() : _blackMessage());
   }
 
   Widget _blueMessage() {
@@ -143,4 +146,127 @@ class _CardMessageState extends State<CardMessage> {
       ],
     );
   }
+
+  void _showBottomSheet() {
+    int itemCount = 3;
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return Container(
+            height: ms.height * 0.15,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              children: [
+                Container(
+                  width: ms.width * (1 / itemCount),
+                  child: _OptionItem(
+                      icon: Icon(Icons.copy_all_outlined,
+                          color: Colors.blueAccent, size: 26),
+                      name: 'Copy Text',
+                      onTap: () {}),
+                ),
+                Container(
+                  width: ms.width * (1 / itemCount),
+                  child: _OptionItem(
+                      icon: Icon(Icons.delete_forever_outlined,
+                          color: Colors.red, size: 26),
+                      name: 'Delete Messafe',
+                      onTap: () {}),
+                ),
+                Container(
+                  width: ms.width * (1 / itemCount),
+                  child: _OptionItem(
+                      icon:
+                          Icon(Icons.info, color: Colors.blueAccent, size: 26),
+                      name: 'Info ',
+                      onTap: () {
+                        _showInfoPopup(context, widget.message);
+                      }),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+}
+
+class _OptionItem extends StatelessWidget {
+  final Icon icon;
+  final String name;
+  final VoidCallback onTap;
+
+  const _OptionItem({
+    required this.icon,
+    required this.name,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onTap(),
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: ms.width * 0.05,
+          top: ms.height * 0.015,
+          bottom: ms.height * 0.025,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            icon,
+            SizedBox(
+                height:
+                    4), // Adjust the spacing between the icon and text as needed
+            Text(name),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InfoPopup extends StatelessWidget {
+  final Message message;
+
+  InfoPopup({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Info'),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+              'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: message.sentTime)}'),
+          SizedBox(height: 8), // Add spacing between the lines
+          message.readTime.isNotEmpty
+              ? Text(
+                  'Read At: ${MyDateUtil.getFormattedTime(context: context, time: message.sentTime)}')
+              : Text('Not seen'), // Add another line of content
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dial
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+  }
+}
+
+void _showInfoPopup(BuildContext context, Message message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return InfoPopup(message: message); // Pass the message here
+    },
+  );
 }
