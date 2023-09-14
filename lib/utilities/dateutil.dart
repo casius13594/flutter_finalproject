@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class MyDateUtil {
@@ -25,5 +27,23 @@ class MyDateUtil {
       return '0' + '${date.month}';
     } else
       return '${date.month}';
+  }
+
+  static String getLastActiveTime(
+      {required BuildContext context, required String lastseen}) {
+    log('Last seen: $lastseen');
+    DateTime time = DateTime.fromMicrosecondsSinceEpoch(int.parse(lastseen));
+    DateTime now = DateTime.now();
+    String formattedTime = TimeOfDay.fromDateTime(time).format(context);
+
+    if (time.day == now.day &&
+        time.month == now.month &&
+        time.year == now.year) {
+      return 'Last seen at $formattedTime';
+    }
+    if ((now.difference(time).inHours / 24).round() == 1) {
+      return 'Last seen yesterday at $formattedTime';
+    }
+    return 'Last seen on ${time.day}/${time.month} on $formattedTime';
   }
 }

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
 import 'package:flutter_finalproject/models/message.dart';
 import 'package:flutter_finalproject/pages/message_page.dart';
+import 'package:flutter_finalproject/utilities/dateutil.dart';
 import 'package:flutter_finalproject/widgets/card_message.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/chat_user.dart';
@@ -145,63 +146,85 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _appBar() {
-    return Row(
-      mainAxisAlignment:
-          MainAxisAlignment.spaceBetween, // Align content at the ends
-      children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(ms.height * .03),
-              child: CachedNetworkImage(
-                width: ms.height * .055,
-                height: ms.height * .055,
-                imageUrl: widget.user.image,
-                errorWidget: (context, url, error) => const CircleAvatar(
-                  child: Icon(CupertinoIcons.person),
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.user.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
+    return InkWell(
+        onTap: () {},
+        child: StreamBuilder(
+            stream: APIs.getUserInfo(widget.user),
+            builder: (context, snapshot) {
+              final data = snapshot.data?.docs;
+              final list = data
+                      ?.map((e) => ChatUserProfile.fromJson(e.data()))
+                      .toList() ??
+                  [];
+              return Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // Align content at the ends
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                        ),
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(ms.height * .03),
+                        child: CachedNetworkImage(
+                          width: ms.height * .055,
+                          height: ms.height * .055,
+                          imageUrl: list.isNotEmpty
+                              ? list[0].image
+                              : widget.user.image,
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                            child: Icon(CupertinoIcons.person),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            list.isNotEmpty ? list[0].name : widget.user.name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            list.isNotEmpty
+                                ? list[0].isActive
+                                    ? 'Active'
+                                    : MyDateUtil.getLastActiveTime(
+                                        context: context,
+                                        lastseen: list[0].lastSeen)
+                                : MyDateUtil.getLastActiveTime(
+                                    context: context,
+                                    lastseen: widget.user.lastSeen),
+                            style: TextStyle(fontSize: 13, color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 2),
-                const Text(
-                  'Status',
-                  style: TextStyle(fontSize: 13, color: Colors.green),
-                ),
-              ],
-            ),
-          ],
-        ),
-        IconButton(
-          onPressed: () {
-            // Handle the info button action
-          },
-          icon: const Icon(
-            Icons.info,
-            color: Colors.black,
-          ),
-        ),
-      ],
-    );
+                  IconButton(
+                    onPressed: () {
+                      // Handle the info button action
+                    },
+                    icon: const Icon(
+                      Icons.info,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              );
+            }));
   }
 
   Widget _chatInput() {

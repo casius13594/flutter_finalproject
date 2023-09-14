@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_finalproject/models/chat_user.dart';
 import 'package:flutter_finalproject/pages/shifscreen.dart';
 import 'package:flutter_finalproject/widgets/card_user.dart';
@@ -25,6 +26,20 @@ class _MessagePageState extends State<MessagePage> {
   @override
   void initState() {
     super.initState();
+    APIs.updateStatusActive(true);
+
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      if (message.toString().contains('resume')) {
+        APIs.updateStatusActive(true);
+      }
+      if (message.toString().contains('pause')) {
+        APIs.updateStatusActive(false);
+      }
+      if (message.toString().contains('inactive')) {
+        APIs.updateStatusActive(false);
+      }
+      return Future.value(message);
+    });
   }
 
   @override
