@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_finalproject/models/chat_user.dart';
 import 'package:flutter_finalproject/models/message.dart';
 import 'package:flutter_finalproject/pages/message_page.dart';
 import 'package:flutter_finalproject/widgets/card_message.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/chat_user.dart';
 import '../widgets/card_user.dart';
 import '../apis/apis.dart';
@@ -26,6 +28,7 @@ class _ChatPageState extends State<ChatPage> {
   bool isTextFieldExpanded = false;
   final _textController = TextEditingController();
   bool _EmojiMenu = false;
+  bool _isUploading = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -65,6 +68,7 @@ class _ChatPageState extends State<ChatPage> {
                             [];
                         if (_list.isNotEmpty) {
                           return ListView.builder(
+                            reverse: true,
                             itemCount: _list.length,
                             padding: EdgeInsets.only(top: ms.height * 0.02),
                             itemBuilder: (context, index) {
@@ -82,6 +86,13 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
+              if (_isUploading)
+                const Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        child: CircularProgressIndicator(strokeWidth: 2))),
               Form(
                 key: _formKey,
                 child: _chatInput(),
@@ -236,7 +247,8 @@ class _ChatPageState extends State<ChatPage> {
                     ? IconButton(
                         onPressed: () {
                           if (_textController.text.isNotEmpty) {
-                            APIs.sendMessage(widget.user, _textController.text);
+                            APIs.sendMessage(
+                                widget.user, _textController.text, Type.text);
                             _textController.text = '';
                           }
                         },
@@ -245,14 +257,35 @@ class _ChatPageState extends State<ChatPage> {
                     : Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final ImagePicker imagePicker = ImagePicker();
+                              final XFile? image = await imagePicker.pickImage(
+                                  source: ImageSource.camera, imageQuality: 70);
+                              if (image != null) {
+                                log('Image Path: ${image.path}');
+                                setState(() => _isUploading = true);
+                                await APIs.sendChatImage(
+                                    widget.user, File(image.path));
+                                setState(() => _isUploading = false);
+                              }
+                            },
                             icon: const Icon(
                               Icons.camera_alt,
                               color: Colors.blueAccent,
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final ImagePicker imagePicker = ImagePicker();
+                              final List<XFile> images = await imagePicker
+                                  .pickMultiImage(imageQuality: 70);
+                              for (var i in images) {
+                                setState(() => _isUploading = true);
+                                await APIs.sendChatImage(
+                                    widget.user, File(i.path));
+                                setState(() => _isUploading = false);
+                              }
+                            },
                             icon: const Icon(
                               Icons.photo_library,
                               color: Colors.blueAccent,

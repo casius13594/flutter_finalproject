@@ -51,7 +51,11 @@ class _ChatUserState extends State<ChatUser> {
                 ),
                 title: Text(widget.user.name),
                 subtitle: Text(
-                  _message != null ? _message!.content : widget.user.lastMess,
+                  _message != null
+                      ? _message!.type == Type.image
+                          ? 'Image sent'
+                          : _message!.content
+                      : widget.user.lastMess,
                   maxLines: 1,
                 ),
                 trailing: _message == null

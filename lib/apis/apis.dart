@@ -1,6 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_finalproject/apis/add_data.dart';
 import 'package:flutter_finalproject/models/message.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/chat_user.dart';
@@ -68,22 +71,32 @@ class APIs {
       ChatUserProfile user) {
     return firestore
         .collection('chats/${getConversationID(user.uid)}/messages/')
+        .orderBy('sent_time', descending: true)
         .snapshots();
   }
 
   static Future<void> sendMessage(
-      ChatUserProfile chatUserProfile, String content) async {
-    final time = DateTime.now().millisecondsSinceEpoch.toString();
-    final Message message = Message(
+      ChatUserProfile chatUserProfile, String content, Type type) async {
+    try {
+      final time = DateTime.now().millisecondsSinceEpoch.toString();
+      final Message message = Message(
         sentTime: time,
         ToID: chatUserProfile.uid,
-        type: Type.text,
+        type: type,
         SenderId: user.uid,
         content: content,
-        readTime: '');
-    final ref = firestore.collection(
-        'chats/${getConversationID(chatUserProfile.uid)}/messages/');
-    await ref.doc(time).set(message.toJson());
+        readTime: '',
+      );
+
+      final ref = firestore.collection(
+          'chats/${getConversationID(chatUserProfile.uid)}/messages/');
+
+      await ref.doc(time).set(message.toJson());
+
+      print('Message sent successfully: $content');
+    } catch (error) {
+      print('Error sending message: $error');
+    }
   }
 
   //update status of message
@@ -124,5 +137,19 @@ class APIs {
       return await _file.readAsBytes();
     }
     print('No Images Selected');
+  }
+
+  static Future<void> sendChatImage(
+      ChatUserProfile chatUserProfile, File file) async {
+    final ext = file.path.split('.').last;
+    final ref = storage.ref().child(
+        'imagesChat/${getConversationID(chatUserProfile.uid)}/${DateTime.now().microsecondsSinceEpoch}.$ext');
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+        .then((p0) {
+      log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+    final imageUrl = await ref.getDownloadURL();
+    await sendMessage(chatUserProfile, imageUrl, Type.image);
   }
 }
