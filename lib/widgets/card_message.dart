@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_finalproject/utilities/dateutil.dart';
 import 'package:get/get.dart';
 import '../models/message.dart';
@@ -164,7 +165,19 @@ class _CardMessageState extends State<CardMessage> {
                       icon: Icon(Icons.copy_all_outlined,
                           color: Colors.blueAccent, size: 26),
                       name: 'Copy Text',
-                      onTap: () {}),
+                      onTap: () async {
+                        await Clipboard.setData(
+                                ClipboardData(text: widget.message.content))
+                            .then((value) {
+                          Navigator.pop(context);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Text Copied'),
+                            ),
+                          );
+                        });
+                      }),
                 ),
                 Container(
                   width: ms.width * (1 / itemCount),
@@ -172,7 +185,17 @@ class _CardMessageState extends State<CardMessage> {
                       icon: Icon(Icons.delete_forever_outlined,
                           color: Colors.red, size: 26),
                       name: 'Delete Messafe',
-                      onTap: () {}),
+                      onTap: () async {
+                        await APIs.deleteMessage(widget.message).then((value) {
+                          Navigator.pop(context);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Delete'),
+                            ),
+                          );
+                        });
+                      }),
                 ),
                 Container(
                   width: ms.width * (1 / itemCount),

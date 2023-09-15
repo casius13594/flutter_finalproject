@@ -135,6 +135,17 @@ class APIs {
         .snapshots();
   }
 
+  static Future<void> deleteMessage(Message message) async {
+    await firestore
+        .collection('chats/${getConversationID(message.ToID)}/messages/')
+        .doc(message.sentTime)
+        .delete();
+
+    if (message.type == Type.image) {
+      await storage.refFromURL(message.content).delete();
+    }
+  }
+
   //image
   static Future<Uint8List?> getImage() async {
     final FirebaseStorage storage = FirebaseStorage.instance;
