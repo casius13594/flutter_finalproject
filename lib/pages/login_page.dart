@@ -62,15 +62,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          gradient: RadialGradient(
-              radius: 0.78,
-              focal: Alignment(-0.02, 2.5),
-              tileMode: TileMode.mirror,
-              colors: [
-            Theme.of(context).colorScheme.tertiary,
-            Theme.of(context).colorScheme.onTertiary
-          ])),
+      color: Theme.of(context).colorScheme.onPrimary,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -115,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        fillColor: Theme.of(context).colorScheme.secondary,
+                        fillColor: Theme.of(context).colorScheme.primaryContainer,
                         filled: true,
                         border: InputBorder.none,
                         hintText: 'Email',
@@ -136,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     controller: _controllerPassword,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                     obscureText: true,
                     decoration: InputDecoration(
@@ -152,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        fillColor: Theme.of(context).colorScheme.secondary,
+                        fillColor: Theme.of(context).colorScheme.primaryContainer,
                         filled: true,
                         border: InputBorder.none,
                         hintText: 'Password',
@@ -179,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Forgot password?',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                            color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
                       ),
@@ -311,7 +303,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Register',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
