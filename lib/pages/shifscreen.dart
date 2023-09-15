@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/pages/friend_page.dart';
+import 'package:flutter_finalproject/pages/search_page.dart';
 import 'package:flutter_finalproject/pages/home_page.dart';
 import 'package:flutter_finalproject/pages/message_page.dart';
 import 'package:flutter_finalproject/pages/setting_page.dart';
@@ -24,9 +25,12 @@ class _shiftPageState extends State<shiftscreen>{
         return MessagePage();
         break;
       case 2:
-        return Friendpage();
+        return FriendPage();
         break;
       case 3:
+        return SearchPage();
+        break;
+      case 4:
         return Settingpage();
         break;
       default:
@@ -50,7 +54,7 @@ class _shiftPageState extends State<shiftscreen>{
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
-        animationDuration: Duration(milliseconds: 300),
+        animationDuration: Duration(milliseconds: 200),
         items: [
           Icon(
             Icons.home,
@@ -65,6 +69,10 @@ class _shiftPageState extends State<shiftscreen>{
             color: Colors.black,
           ),
           Icon(
+            Icons.search,
+            color: Colors.black,
+          ),
+          Icon(
             Icons.settings,
             color: Colors.black,
           ),
@@ -72,7 +80,6 @@ class _shiftPageState extends State<shiftscreen>{
         onTap: (index){
           _OnItemCLick(index);
         },
-
       ),
     );
   }
