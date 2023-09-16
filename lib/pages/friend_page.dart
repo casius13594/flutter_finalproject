@@ -213,15 +213,18 @@ class _FriendPageState extends State<FriendPage> {
                           : Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                ElevatedButton(
-                                  onPressed: () {
-                                    deleteFriendState(email_current!,
-                                        item['email'], 0, index);
-                                    deleteFriendState(
-                                        item['email'], email_current!, 0, -1);
-                                  },
-                                  child: Text(
-                                    'Reject',
+                                Container(
+                                  margin: EdgeInsets.only(right: 5),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      deleteFriendState(email_current!,
+                                          item['email'], 0, index);
+                                      deleteFriendState(
+                                          item['email'], email_current!, 0, -1);
+                                    },
+                                    child: Text(
+                                      'Reject',
+                                    ),
                                   ),
                                 ),
                                 ElevatedButton(

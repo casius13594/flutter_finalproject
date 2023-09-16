@@ -43,59 +43,49 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-            gradient: RadialGradient(
-          colors: [
-            Theme.of(context).colorScheme.tertiary,
-            Theme.of(context).colorScheme.tertiaryContainer
-          ],
-          radius: 1.2,
-        )),
-        child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Map Chat',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onError,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Lottie.asset('lib/animation/maplove.json'),
-                ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.errorContainer,
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      textStyle: TextStyle(fontSize: 28),
-                    ),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
-                    },
-                    icon: Icon(Icons.map_outlined,
-                        size: 42,
-                        color: Theme.of(context).colorScheme.onBackground),
-                    label: Text(
-                      "Let's discover",
-                      style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onTertiaryContainer),
-                    ))
-              ],
-            )),
-      );
+  Widget build(BuildContext context) => Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Map Chat',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.bold,
+              fontSize: 50,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Lottie.asset('lib/animation/maplove.json'),
+          ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).colorScheme.errorContainer,
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                textStyle: TextStyle(fontSize: 28),
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+              icon: Icon(Icons.map_outlined,
+                  size: 42,
+                  color: Theme.of(context).colorScheme.onBackground),
+              label: Text(
+                "Let's discover",
+                style: TextStyle(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onTertiaryContainer),
+              ))
+        ],
+      ));
 }
 
 ThemeData _dark = ThemeData(
