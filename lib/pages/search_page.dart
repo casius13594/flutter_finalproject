@@ -166,12 +166,6 @@ class _SearchPageState extends State<SearchPage> {
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: InkWell(
                     onTap: () {
-                      ChatUserProfile user_chat =
-                          ChatUserProfile.fromJson(item);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => ChatPage(user: user_chat)));
                     },
                     child: ListTile(
                         title: Row(
