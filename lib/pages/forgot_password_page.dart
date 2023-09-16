@@ -26,6 +26,7 @@ class _ResetPasswordState extends State<ResetPassword>{
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text('Reset Password'),
+      iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurfaceVariant),
     ),
     body: Padding(
       padding: EdgeInsets.all(16),
