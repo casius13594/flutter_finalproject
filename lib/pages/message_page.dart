@@ -107,39 +107,55 @@ class _MessagePageState extends State<MessagePage> {
           automaticallyImplyLeading: false,
         ),
         body: StreamBuilder(
-          stream: APIs.getAllUsers(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              //check data loading
-              case ConnectionState.waiting:
-              case ConnectionState.none:
-                return const Center(child: CircularProgressIndicator());
-              case ConnectionState.active:
-              case ConnectionState.done:
-                final data = snapshot.data?.docs;
-                list = data
-                        ?.map((e) => ChatUserProfile.fromJson(e.data()))
-                        .toList() ??
-                    [];
-                if (list.isNotEmpty) {
-                  return ListView.builder(
-                      itemCount:
-                          _checkSearch ? _searchList.length : list.length,
-                      padding: EdgeInsets.only(top: ms.height * 0.02),
-                      itemBuilder: (context, index) {
-                        return ChatUser(
-                            user: _checkSearch
-                                ? _searchList[index]
-                                : list[index]);
-                      });
-                } else {
-                  return const Center(
-                    child:
-                        Text('No connection', style: TextStyle(fontSize: 20)),
+            stream: APIs.getMyUsersId(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                //check data loading
+                case ConnectionState.waiting:
+                case ConnectionState.none:
+                  return const Center(child: CircularProgressIndicator());
+                case ConnectionState.active:
+                case ConnectionState.done:
+                  return StreamBuilder(
+                    stream: APIs.getAllUsers(
+                        snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        //check data loading
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data?.docs;
+                          list = data
+                                  ?.map(
+                                      (e) => ChatUserProfile.fromJson(e.data()))
+                                  .toList() ??
+                              [];
+                          if (list.isNotEmpty) {
+                            return ListView.builder(
+                                itemCount: _checkSearch
+                                    ? _searchList.length
+                                    : list.length,
+                                padding: EdgeInsets.only(top: ms.height * 0.02),
+                                itemBuilder: (context, index) {
+                                  return ChatUser(
+                                      user: _checkSearch
+                                          ? _searchList[index]
+                                          : list[index]);
+                                });
+                          } else {
+                            return const Center(
+                              child: Text('No connection',
+                                  style: TextStyle(fontSize: 20)),
+                            );
+                          }
+                      }
+                    },
                   );
-                }
-            }
-          },
-        ));
+              }
+            }));
   }
 }

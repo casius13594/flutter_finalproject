@@ -37,6 +37,32 @@ class APIs {
     return (await firestore.collection('users').doc(user.uid).get()).exists;
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getMyUsersId() {
+    return firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('my_users')
+        .snapshots();
+  }
+
+  static Future<bool> addUserintoChat(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      await firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<void> createUser() async {
     final time = DateTime.now().microsecondsSinceEpoch.toString();
     final chatUserProfile = ChatUserProfile(
@@ -56,10 +82,15 @@ class APIs {
         .set(chatUserProfile.toJson());
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
+      List<String> userIds) {
     return firestore
         .collection('users')
-        .where('email', isNotEqualTo: user.email)
+        .where('uid',
+            whereIn: userIds.isEmpty
+                ? ['']
+                : userIds) //because empty list throws an error
+        // .where('id', isNotEqualTo: user.uid)
         .snapshots();
   }
 
@@ -79,6 +110,14 @@ class APIs {
     });
   }
 
+  //Get List Friend
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllFriendofUser() {
+    return firestore
+        .collection('friend')
+        .where('friend1', isEqualTo: user.email)
+        .where('state', isEqualTo: 2)
+        .snapshots();
+  }
   //ChatMess
 
   static String getConversationID(String id) => user.uid.hashCode <= id.hashCode
