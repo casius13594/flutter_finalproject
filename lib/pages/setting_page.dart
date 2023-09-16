@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_finalproject/apis/add_data.dart';
+import 'package:flutter_finalproject/apis/apis.dart';
 import 'package:flutter_finalproject/pages/change_password.dart';
 import 'package:flutter_finalproject/pages/login_page.dart';
 import 'package:flutter_finalproject/pages/profile_edit.dart';
@@ -146,14 +147,19 @@ class _SettingPageState extends State<Settingpage> {
                                 padding: EdgeInsets.only(left: 0, top: 0),
                                 // image of profile
                                 child: CircleAvatar(
-                                        radius: 64,
-                                        backgroundImage: NetworkImage(
-                                          (snapshot.data!.data() as Map<String, dynamic>?)?['image'] == null ||
-                                            (snapshot.data!.data() as Map<String, dynamic>?)?['image'] == 'null'
-                                                 ?
-                                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-                                                : (snapshot.data!.data() as Map<String, dynamic>?)?['image'],
-                                      ),
+                                  radius: 64,
+                                  backgroundImage: NetworkImage(
+                                    (snapshot.data!.data() as Map<String,
+                                                    dynamic>?)?['image'] ==
+                                                null ||
+                                            (snapshot.data!.data() as Map<
+                                                    String,
+                                                    dynamic>?)?['image'] ==
+                                                'null'
+                                        ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                                        : (snapshot.data!.data()
+                                            as Map<String, dynamic>?)?['image'],
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 30),
@@ -254,7 +260,7 @@ class _SettingPageState extends State<Settingpage> {
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                  Theme.of(context).colorScheme.onTertiary,
+                                      Theme.of(context).colorScheme.onTertiary,
                                   minimumSize: Size.fromHeight(50),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
@@ -280,10 +286,13 @@ class _SettingPageState extends State<Settingpage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ChangePasswordPage()));
+                                          builder: (context) =>
+                                              ChangePasswordPage()));
                                 },
                               ),
-                              SizedBox(height: 15,),
+                              SizedBox(
+                                height: 15,
+                              ),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
@@ -310,8 +319,9 @@ class _SettingPageState extends State<Settingpage> {
                                           .onSurfaceVariant),
                                 ),
                                 onPressed: () async {
+                                  APIs.updateStatusActive(false);
                                   GoogleSignIn _googleSignIn = GoogleSignIn();
-                                  if(_googleSignIn.currentUser != null)
+                                  if (_googleSignIn.currentUser != null)
                                     await _googleSignIn.disconnect();
                                   await FirebaseAuth.instance.signOut();
                                   Navigator.push(
@@ -322,8 +332,7 @@ class _SettingPageState extends State<Settingpage> {
                               ),
                             ],
                           );
-                        })
-                ),
+                        })),
               ),
             ),
             _isLoading

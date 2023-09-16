@@ -45,18 +45,21 @@ class APIs {
         .snapshots();
   }
 
-  static Future<bool> addUserintoChat(String email) async {
-    final data = await firestore
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get();
-    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
-      await firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('my_users')
-          .doc(data.docs.first.id)
-          .set({});
+  static Future<bool> addUserIntoChat(String email) async {
+    final currentUserRef = firestore.collection('users').doc(user.uid);
+    final otherUserQuery =
+        firestore.collection('users').where('email', isEqualTo: email);
+
+    final otherUserSnapshot = await otherUserQuery.get();
+
+    if (otherUserSnapshot.docs.isNotEmpty) {
+      final otherUserDoc = otherUserSnapshot.docs.first;
+      final otherUserRef = firestore.collection('users').doc(otherUserDoc.id);
+
+      await currentUserRef.collection('my_users').doc(otherUserRef.id).set({});
+
+      await otherUserRef.collection('my_users').doc(currentUserRef.id).set({});
+
       return true;
     } else {
       return false;
@@ -86,11 +89,7 @@ class APIs {
       List<String> userIds) {
     return firestore
         .collection('users')
-        .where('uid',
-            whereIn: userIds.isEmpty
-                ? ['']
-                : userIds) //because empty list throws an error
-        // .where('id', isNotEqualTo: user.uid)
+        .where('uid', whereIn: userIds.isEmpty ? [''] : userIds)
         .snapshots();
   }
 

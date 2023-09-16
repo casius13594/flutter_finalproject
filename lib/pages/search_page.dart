@@ -200,7 +200,7 @@ class _SearchPageState extends State<SearchPage> {
                             SizedBox(width: 5),
                             ElevatedButton(
                               onPressed: () {
-                                APIs.addUserintoChat(item['email']);
+                                APIs.addUserIntoChat(item['email']);
                                 if (item['state'] == 0) {
                                   addFriendState(
                                       email_current!, item['email'], 1, index);
