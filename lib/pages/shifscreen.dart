@@ -6,18 +6,16 @@ import 'package:flutter_finalproject/pages/home_page.dart';
 import 'package:flutter_finalproject/pages/message_page.dart';
 import 'package:flutter_finalproject/pages/setting_page.dart';
 
-
 class shiftscreen extends StatefulWidget {
   shiftscreen();
   @override
   State<shiftscreen> createState() => _shiftPageState();
 }
 
-
-class _shiftPageState extends State<shiftscreen>{
+class _shiftPageState extends State<shiftscreen> {
   int _selectedPageIndex = 0;
   Widget getpage(int index) {
-    switch (index){
+    switch (index) {
       case 0:
         return Homepage();
         break;
@@ -45,43 +43,42 @@ class _shiftPageState extends State<shiftscreen>{
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    ms = MediaQuery.of(context).size;
     return Scaffold(
       body: getpage(_selectedPageIndex),
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        height: ms.height * .07,
+        backgroundColor: Colors.white,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
         animationDuration: Duration(milliseconds: 200),
         items: [
           Icon(
             Icons.home,
-            color: Colors.black,
+            color: Colors.white,
           ),
           Icon(
             Icons.message,
-            color: Colors.black,
+            color: Colors.white,
           ),
           Icon(
             Icons.mobile_friendly,
-            color: Colors.black,
+            color: Colors.white,
           ),
           Icon(
             Icons.search,
-            color: Colors.black,
+            color: Colors.white,
           ),
           Icon(
             Icons.settings,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ],
-        onTap: (index){
+        onTap: (index) {
           _OnItemCLick(index);
         },
       ),
     );
   }
-
 }

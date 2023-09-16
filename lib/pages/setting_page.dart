@@ -88,7 +88,7 @@ class _SettingPageState extends State<Settingpage> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -97,7 +97,7 @@ class _SettingPageState extends State<Settingpage> {
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30,
-              color: Theme.of(context).colorScheme.onSurfaceVariant),
+              color: Theme.of(context).colorScheme.surfaceVariant),
         ),
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -107,7 +107,7 @@ class _SettingPageState extends State<Settingpage> {
                 bottomLeft: Radius.circular(25),
                 bottomRight: Radius.circular(25),
               ),
-              color: Theme.of(context).colorScheme.surfaceVariant),
+              color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ),
       body: SafeArea(
@@ -118,7 +118,7 @@ class _SettingPageState extends State<Settingpage> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: width,
-                height: height * .73,
+                height: height * .8,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.only(
@@ -147,7 +147,7 @@ class _SettingPageState extends State<Settingpage> {
                                 padding: EdgeInsets.only(left: 0, top: 0),
                                 // image of profile
                                 child: CircleAvatar(
-                                  radius: 64,
+                                  radius: 70,
                                   backgroundImage: NetworkImage(
                                     (snapshot.data!.data() as Map<String,
                                                     dynamic>?)?['image'] ==
@@ -162,7 +162,7 @@ class _SettingPageState extends State<Settingpage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 30),
+                              SizedBox(width: 30, height: 30),
 
                               FittedBox(
                                 fit: BoxFit.scaleDown,
@@ -195,7 +195,7 @@ class _SettingPageState extends State<Settingpage> {
                               ),
 
                               SizedBox(
-                                height: 1,
+                                height: 5,
                               ), // Adjust the spacing as needed
                               Divider(
                                 thickness: 1,
@@ -205,7 +205,7 @@ class _SettingPageState extends State<Settingpage> {
                                     .onSurfaceVariant, // Adjust the color of the line as needed
                               ),
                               SizedBox(
-                                height: 1,
+                                height: 20,
                               ),
 
                               Row(
@@ -234,7 +234,9 @@ class _SettingPageState extends State<Settingpage> {
                                               .onTertiaryContainer,
                                         ))
                                   ]),
-
+                              SizedBox(
+                                height: 20,
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -256,15 +258,21 @@ class _SettingPageState extends State<Settingpage> {
                                       })
                                 ],
                               ),
-                              SizedBox(height: 15),
+                              SizedBox(
+                                height: 80,
+                              ),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       Theme.of(context).colorScheme.onTertiary,
                                   minimumSize: Size.fromHeight(50),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        20), // Adjust the radius as needed
+                                    side: BorderSide(
+                                        color: Colors
+                                            .black, // Set the border color
+                                        width: 2.0),
+                                    borderRadius: BorderRadius.circular(20),
+                                    // Adjust the radius as needed
                                   ),
                                 ),
                                 icon: Icon(
@@ -299,8 +307,11 @@ class _SettingPageState extends State<Settingpage> {
                                       Theme.of(context).colorScheme.onTertiary,
                                   minimumSize: Size.fromHeight(50),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        20), // Adjust the radius as needed
+                                    side: BorderSide(
+                                        color: Colors
+                                            .black, // Set the border color
+                                        width: 2.0),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
                                 icon: Icon(

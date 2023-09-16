@@ -46,7 +46,7 @@ class _MessagePageState extends State<MessagePage> {
   Widget build(BuildContext context) {
     ms = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Row(
             children: [

@@ -25,76 +25,82 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: switcher,
-      builder: (context, bool newvalue, child){
+      builder: (context, bool newvalue, child) {
         return MaterialApp(
-          theme: newvalue? _dark : _light,
+          theme: newvalue ? _dark : _light,
           debugShowCheckedModeBanner: false,
-
-          home:MainPage(),
+          home: MainPage(),
         );
       },
     );
   }
 }
 
-class MainPage extends StatefulWidget{
+class MainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MainPageState();
-
 }
 
-class _MainPageState extends State<MainPage>{
-
-
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-        gradient: RadialGradient(
-          colors: [Theme.of(context).colorScheme.tertiary,
-            Theme.of(context).colorScheme.tertiaryContainer],
+        decoration: BoxDecoration(
+            gradient: RadialGradient(
+          colors: [
+            Theme.of(context).colorScheme.tertiary,
+            Theme.of(context).colorScheme.tertiaryContainer
+          ],
           radius: 1.2,
-        )
-    ),
-    child: Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 20,),
-          Text(
-            'Map Chat',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onError,
-              fontWeight: FontWeight.bold,
-              fontSize: 50,
-            ),),
-
-          SizedBox(height: 20,),
-          Lottie.asset('lib/animation/maplove.json'),
-          ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.errorContainer,
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                textStyle: TextStyle(fontSize: 28),
-              ),
-              onPressed: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context)=> LoginPage()));
-              },
-              icon: Icon(Icons.map_outlined,size:42, color: Theme.of(context).colorScheme.onBackground),
-              label: Text("Let's discover",style: TextStyle(
-                  color: Theme.of(context).colorScheme.onTertiaryContainer
-              ),))
-        ],
-      )
-    ),
-  );
-
+        )),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Map Chat',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onError,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Lottie.asset('lib/animation/maplove.json'),
+                ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.errorContainer,
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      textStyle: TextStyle(fontSize: 28),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    },
+                    icon: Icon(Icons.map_outlined,
+                        size: 42,
+                        color: Theme.of(context).colorScheme.onBackground),
+                    label: Text(
+                      "Let's discover",
+                      style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onTertiaryContainer),
+                    ))
+              ],
+            )),
+      );
 }
 
-
-ThemeData _dark = ThemeData( brightness: Brightness.dark,
-    colorScheme:  ColorScheme.dark(
+ThemeData _dark = ThemeData(
+    brightness: Brightness.dark,
+    colorScheme: ColorScheme.dark(
       primary: Color(0xff66e04b)!,
       onPrimary: Color(0xff003a00)!,
       primaryContainer: Color(0xFF005300)!,
@@ -113,23 +119,22 @@ ThemeData _dark = ThemeData( brightness: Brightness.dark,
       onErrorContainer: Color(0xFFffb4a9)!,
       background: Color(0xFF051F23)!,
       onBackground: Color(0xFFD7E7CC)!,
-      surface:  Color(0xFF7A2558)!,
+      surface: Color(0xFF7A2558)!,
       onSurface: Color(0xFFEC43A8)!,
       onSurfaceVariant: Color(0xFFD9E2FF)!,
-      surfaceVariant:Color(0xFF525e7d)! ,
-    )
-);
+      surfaceVariant: Color(0xFF525e7d)!,
+    ));
 
-
-ThemeData _light = ThemeData(brightness: Brightness.light,
-    colorScheme:  ColorScheme.light(
-      primary: Color(0xff006874)!,
+ThemeData _light = ThemeData(
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+      primary: Color.fromARGB(255, 231, 213, 167),
       onPrimary: Color(0xFFFFFFFF)!,
       primaryContainer: Color(0xFF90f1ff)!,
       onPrimaryContainer: Color(0xFF001f24)!,
       secondary: Color(0xffa46367)!,
       onSecondary: Color(0xFFFFFFF)!,
-      secondaryContainer: Color(0xffcde7ec)!,
+      secondaryContainer: Color.fromARGB(255, 243, 239, 213),
       onSecondaryContainer: Color(0xff051f23)!,
       tertiary: Color(0xFF525e7d)!,
       onTertiary: Color(0xFFFFFFFF)!,
@@ -141,9 +146,8 @@ ThemeData _light = ThemeData(brightness: Brightness.light,
       onErrorContainer: Color(0xff400001)!,
       background: Color(0xFFD7E7CC)!,
       onBackground: Color(0xFF051F23)!,
-      surface:  Color(0xFFF696D2)!,
+      surface: Color(0xFFF696D2)!,
       onSurface: Color(0xFF591C40)!,
-      onSurfaceVariant: Color(0xFF525e7d)!,
-      surfaceVariant: Color(0xFFD9E2FF)!,
-    )
-);
+      onSurfaceVariant: Colors.black,
+      surfaceVariant: Colors.white,
+    ));
