@@ -75,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage>{
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    'Full Name',
+                    'Display Name',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onTertiaryContainer,
                       fontSize:  20,
