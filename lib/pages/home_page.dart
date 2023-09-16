@@ -63,7 +63,7 @@ class _HomePageState extends State<Homepage>{
   void dispose() {
     mapController.dispose();
     locationSubscription?.cancel();
-    subscription.cancel(); // Cancel the stream subscription when disposing of the widget
+    subscription.cancel();
     updateTimer?.cancel();
     super.dispose();
   }
@@ -121,7 +121,6 @@ class _HomePageState extends State<Homepage>{
     updateTimer = Timer.periodic(Duration(seconds: 5), (Timer timer) async {
       try {
         var newLocation = await location.getLocation();
-        _updateGeoPoint();
         if (_previousLocation != null) {
           double distance = distanceBetween(
             _previousLocation!.latitude!,
@@ -131,7 +130,7 @@ class _HomePageState extends State<Homepage>{
           );
 
         if (distance >= 0.05) {
-          // Update data and markers
+          // If distance >= 50m, update data and markers
           _updateGeoPoint();
         }
         }
