@@ -258,8 +258,9 @@ class _SettingPageState extends State<Settingpage> {
                                       })
                                 ],
                               ),
+
                               SizedBox(
-                                height: 80,
+                                height: 40,
                               ),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(

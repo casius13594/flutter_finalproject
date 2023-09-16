@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'pages/login_page.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,7 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
   );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
