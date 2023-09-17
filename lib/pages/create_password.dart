@@ -16,23 +16,18 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
 
   @override
   Widget build (BuildContext context){
-    return Container(
-      decoration: BoxDecoration(
-          gradient: RadialGradient(
-              radius: 0.6,
-              focalRadius: 0.17,
-              focal: Alignment(0.3, -0.3),
-              tileMode: TileMode.mirror,
-              colors: [Theme.of(context).colorScheme.tertiary,
-                Theme.of(context).colorScheme.onTertiary]
-          )
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBodyBehindAppBar: true,
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          title: Text('Create Password'),
+          titleTextStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 20,
+              fontWeight: FontWeight.bold
+          ),
+          iconTheme: IconThemeData(
+              color: Colors.black),
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -41,53 +36,37 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 100,),
-                  Text(
-                    'Create \nPassword',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                      fontSize:  55,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 50,),
                   //Password
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       'Your account password',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onTertiaryContainer,
                         fontSize:  20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  SizedBox(height: 5,),
                   TextField(
                     controller: _controllerPasswordGoogle,
                     obscureText: true,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                     decoration: InputDecoration(
                         errorText: _passwordValidateGoogle ? 'Password length must be at least 6 characters' : null,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onPrimaryContainer,
-                              width: 2),
+                          borderSide: BorderSide(width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface,
-                              width: 2),
+                          borderSide: BorderSide(width: 2),
                         ),
                         hintText: 'Password',
-                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onTertiaryContainer),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         )
                     ),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 10,),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                       child: Text(
@@ -99,7 +78,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                         ),
                       )
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 20,),
                   Align(
                     alignment: Alignment.topRight,
                       child:Directionality(
@@ -110,9 +89,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(5),
                               fixedSize: Size(100, 50),
-                              shadowColor: Theme.of(context).colorScheme.onBackground,
-                              side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
-                              backgroundColor: Theme.of(context).colorScheme.onSurface,),
+                            ),
                             onPressed: () async {
                               setState(() {
                                 _controllerPasswordGoogle.text.length < 6 ?
@@ -147,7 +124,6 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
             ),
           ),
         ),
-      ),
     );
   }
 }
