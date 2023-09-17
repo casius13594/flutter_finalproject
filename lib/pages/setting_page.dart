@@ -234,30 +234,30 @@ class _SettingPageState extends State<Settingpage> {
                                               .onTertiaryContainer,
                                         ))
                                   ]),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                      child: Text(
-                                    'Change theme:',
-                                    style: TextStyle(fontSize: 20),
-                                  )),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Switch(
-                                      value: MyApp.switcher.value,
-                                      onChanged: (newvalue) {
-                                        setState(() {
-                                          MyApp.switcher.value = newvalue;
-                                        });
-                                      })
-                                ],
-                              ),
+                              // SizedBox(
+                              //   height: 20,
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Expanded(
+                              //         child: Text(
+                              //       'Change theme:',
+                              //       style: TextStyle(fontSize: 20),
+                              //     )),
+                              //     SizedBox(
+                              //       width: 20,
+                              //     ),
+                              //     Switch(
+                              //         value: MyApp.switcher.value,
+                              //         onChanged: (newvalue) {
+                              //           setState(() {
+                              //             MyApp.switcher.value = newvalue;
+                              //           });
+                              //         })
+                              //   ],
+                              // ),
 
                               SizedBox(
                                 height: 40,

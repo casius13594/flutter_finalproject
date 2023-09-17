@@ -16,14 +16,12 @@ class PhoneVerify extends StatefulWidget {
 
   PhoneVerify();
 
-  PhoneVerify.withData(
-      this.name);
-  PhoneVerify.changeEmail(
-      this.email);
+  PhoneVerify.withData(this.name);
+
+  PhoneVerify.changeEmail(this.email);
 
   @override
-  State<StatefulWidget> createState() =>
-      _PhoneVerifyState(name, email);
+  State<StatefulWidget> createState() => _PhoneVerifyState(name, email);
 }
 
 class _PhoneVerifyState extends State<PhoneVerify> {
@@ -32,7 +30,6 @@ class _PhoneVerifyState extends State<PhoneVerify> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   String name1 = "";
   String oldEmail = "";
-
 
   _PhoneVerifyState(String name, String email) {
     name1 = name;
@@ -55,19 +52,20 @@ class _PhoneVerifyState extends State<PhoneVerify> {
   }
 
   void reverseEmail() async {
-    if(!isEmailVerified) {
+    if (!isEmailVerified) {
       await auth.currentUser?.updateEmail(oldEmail);
-      DocumentReference documentReference = firestore.collection('users').doc(auth.currentUser?.uid);
+      DocumentReference documentReference =
+          firestore.collection('users').doc(auth.currentUser?.uid);
       await documentReference.update({
-        'email' : oldEmail,
+        'email': oldEmail,
       });
       Fluttertoast.showToast(msg: 'Email edition is reversed.');
-  }
+    }
   }
 
   @override
   void dispose() {
-    if(oldEmail != "") reverseEmail();
+    if (oldEmail != "") reverseEmail();
     _timerCheckVerified.cancel();
     super.dispose();
   }
@@ -79,7 +77,7 @@ class _PhoneVerifyState extends State<PhoneVerify> {
     });
     if (isEmailVerified) {
       _timerCheckVerified.cancel();
-      if(name1 != "") await auth.currentUser?.updateDisplayName(name1);
+      if (name1 != "") await auth.currentUser?.updateDisplayName(name1);
       Fluttertoast.showToast(msg: 'Your email is successfully verified.');
       APIs.SelfInfo();
     }
@@ -100,76 +98,66 @@ class _PhoneVerifyState extends State<PhoneVerify> {
   @override
   Widget build(BuildContext context) => isEmailVerified
       ? LoginPage()
-      : Container(
-          decoration: BoxDecoration(
-              gradient: RadialGradient(
-                  radius: 0.6,
-                  focalRadius: 0.17,
-                  focal: Alignment(0.3, -0.3),
-                  tileMode: TileMode.mirror,
-                  colors: [
-                Theme.of(context).colorScheme.tertiary,
-                Theme.of(context).colorScheme.onTertiary
-              ])),
-          child: Scaffold(
+      : Scaffold(
+          appBar: AppBar(
             backgroundColor: Colors.transparent,
-            extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
+            elevation: 0,
+            title: Text('Email Verification'),
+            titleTextStyle: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 20,
+                fontWeight: FontWeight.bold
             ),
-            body: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('A verification email has been sent to your email.',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).colorScheme.onTertiaryContainer),
-                      textAlign: TextAlign.center),
-                  SizedBox(
-                    height: 24,
+            iconTheme: IconThemeData(
+                color: Colors.black),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('A verification email has been sent to your email.',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center),
+                SizedBox(
+                  height: 24,
+                ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size.fromHeight(50),
                   ),
-                  ElevatedButton.icon(
+                  icon: Icon(Icons.email, size: 32),
+                  label: Text(
+                    'Resend Email',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  onPressed: () {
+                    if (canResendEmail) {
+                      sendVerificationEmail();
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: 'Please wait and try again later');
+                    }
+                  },
+                ),
+                SizedBox(height: 8),
+                TextButton(
                     style: ElevatedButton.styleFrom(
-                      minimumSize: Size.fromHeight(50),
-                      shadowColor: Theme.of(context).colorScheme.onBackground,
-                      side: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2),
-                      backgroundColor: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    icon: Icon(Icons.email, size: 32),
-                    label: Text(
-                      'Resend Email',
-                      style: TextStyle(fontSize: 24),
-                    ),
+                        minimumSize: Size.fromHeight(50)),
                     onPressed: () {
-                      if (canResendEmail) {
-                        sendVerificationEmail();
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: 'Please wait and try again later');
-                      }
+                      auth.signOut();
+                      _timerCheckVerified.cancel();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
-                  ),
-                  SizedBox(height: 8),
-                  TextButton(
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size.fromHeight(50)),
-                      onPressed: () {
-                        auth.signOut();
-                        _timerCheckVerified.cancel();
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> LoginPage()));
-                      },
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 24),
-                      ))
-                ],
-              ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 24),
+                    ))
+              ],
             ),
-          ));
+          ),
+        );
 // @override
 // Widget build(BuildContext context) {
 //   final defaultPinTheme = PinTheme(
