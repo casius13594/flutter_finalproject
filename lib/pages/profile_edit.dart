@@ -130,7 +130,6 @@ class _ProfileEditingState extends State<ProfileEditing> {
       )),
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        backgroundColor: Colors.grey[300],
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -143,7 +142,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
                   height: safeHeight * .3,
                   width: width,
                   decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Colors.blue,
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(230),
                           bottomLeft: Radius.circular(230))),
@@ -155,7 +154,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
                       gradient: LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
-                        colors: [Colors.red, Colors.blueAccent],
+                        colors: [Colors.blue, Theme.of(context).colorScheme.primaryContainer],
                       ),
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(230),
@@ -175,8 +174,7 @@ class _ProfileEditingState extends State<ProfileEditing> {
                       'Profile',
                       style: TextStyle(
                           fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.cyan),
+                          fontWeight: FontWeight.bold,),
                     ),
                     SizedBox(
                       height: 25,
@@ -204,8 +202,6 @@ class _ProfileEditingState extends State<ProfileEditing> {
                       child: Text(
                         'Display Name',
                         style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onTertiaryContainer,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -216,33 +212,19 @@ class _ProfileEditingState extends State<ProfileEditing> {
                     ),
                     TextField(
                       controller: _controllerName,
-                      style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onTertiaryContainer),
                       decoration: InputDecoration(
                           errorText: _nameValidate
                               ? 'This field cannot be empty'
                               : null,
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                                width: 2),
+                            borderSide: BorderSide(width: 2),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                width: 2),
+                            borderSide: BorderSide(width: 2),
                           ),
                           hintText: 'Name',
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onTertiaryContainer),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           )),
@@ -252,7 +234,8 @@ class _ProfileEditingState extends State<ProfileEditing> {
                     ),
                     ElevatedButton(
                         onPressed: saveProfile,
-                        child: const Text('Save Profile'))
+                        child: const Text('Save Profile',
+                        style: TextStyle(color: Colors.black),))
                   ],
                 ),
               ),

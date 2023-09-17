@@ -260,7 +260,7 @@ class _ChatPageState extends State<ChatPage> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: InputDecoration(
-                        hintText: "Message",
+                        hintText: "  Message...",
                         border: InputBorder.none,
                       ),
                     ),
