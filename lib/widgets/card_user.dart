@@ -59,7 +59,13 @@ class _ChatUserState extends State<ChatUser> {
                       ),
                     ),
                   ),
-                  title: Text(widget.user.name),
+                  title: Text(
+                    widget.user.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      // You can also specify other TextStyle properties here if needed
+                    ),
+                  ),
                   subtitle: Text(
                     _message != null
                         ? _message!.type == Type.image
@@ -67,6 +73,11 @@ class _ChatUserState extends State<ChatUser> {
                             : _message!.content
                         : widget.user.lastMess,
                     maxLines: 1,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      // You can also specify other TextStyle properties here if needed
+                    ),
                   ),
                   trailing: _message == null
                       ? null
@@ -83,7 +94,7 @@ class _ChatUserState extends State<ChatUser> {
                           : Text(
                               MyDateUtil.getLastMessageTime(
                                   context: context, time: _message!.sentTime),
-                              style: const TextStyle(color: Colors.black54),
+                              style: const TextStyle(color: Colors.black),
                             ),
                 );
               }),

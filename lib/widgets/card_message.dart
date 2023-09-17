@@ -59,7 +59,7 @@ class _CardMessageState extends State<CardMessage> {
                       )),
                   child: Text(
                     widget.message.content,
-                    style: const TextStyle(fontSize: 15, color: Colors.white70),
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
                   ),
                 )
               : Container(
@@ -112,7 +112,7 @@ class _CardMessageState extends State<CardMessage> {
                       )),
                   child: Text(
                     widget.message.content,
-                    style: const TextStyle(fontSize: 15, color: Colors.white70),
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
                   ),
                 )
               : Container(
