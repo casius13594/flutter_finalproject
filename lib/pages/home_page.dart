@@ -99,8 +99,8 @@ class _HomePageState extends State<Homepage>{
           markers: markers,
         ),
         Positioned(
-            bottom: 150,
-            right: 10,
+            bottom: 115,
+            right: 0,
             child:
             TextButton(
                 child: Icon(Icons.refresh),
