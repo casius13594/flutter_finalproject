@@ -158,6 +158,7 @@ class _PhoneVerifyState extends State<PhoneVerify> {
                           minimumSize: Size.fromHeight(50)),
                       onPressed: () {
                         auth.signOut();
+                        _timerCheckVerified.cancel();
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context)=> LoginPage()));
                       },

@@ -26,6 +26,10 @@ class _ResetPasswordState extends State<ResetPassword>{
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text('Reset Password'),
+      titleTextStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        fontSize: 20
+      ),
       iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onSurfaceVariant),
     ),
     body: Padding(
@@ -47,7 +51,7 @@ class _ResetPasswordState extends State<ResetPassword>{
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(labelText: 'Email'),
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (email) => email! != null && !EmailValidator.validate(email)
+              validator: (email) => email != null && !EmailValidator.validate(email)
               ? 'Enter a valid email'
               : null,
             ),

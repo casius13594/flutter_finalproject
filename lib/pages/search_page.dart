@@ -165,13 +165,17 @@ class _SearchPageState extends State<SearchPage> {
                 return Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: InkWell(
-                    onTap: () {
-                    },
+                    onTap: () {},
                     child: ListTile(
                         title: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(item['name']),
+                            Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(item['name']),
+                              ),
+                            ),
                             SizedBox(width: 5),
                             is_online(item['is_active']),
                           ],
@@ -222,16 +226,12 @@ class _SearchPageState extends State<SearchPage> {
     switch (state) {
       case 0:
         return Text('Connect');
-        break;
       case 1:
         return Text('Pending');
-        break;
       case 2:
         return Text('Friend');
-        break;
       default:
         return Text('Connect');
-        break;
     }
   }
 
